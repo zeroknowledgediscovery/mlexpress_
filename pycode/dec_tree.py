@@ -33,16 +33,10 @@ parser = argparse.ArgumentParser(description='Example with non-optional argument
  
 parser.add_argument('--response', dest='RESPONSE', action="store", type=str,
                     default='SPECIES',help="Response Variable")
-parser.add_argument('--filea', dest='FILE', action="store", type=str,
+parser.add_argument('--file', dest='FILE', action="store", type=str,
                     default='../../data/database_may30_2017/AA_Human_20022003')
-parser.add_argument('--fileb', dest='FILE2', action="store", type=str,
-                    default='../../data/database_may30_2017/AA_Swine_20022003')
-parser.add_argument('--fileax', dest='FILEx', action="store", type=str,
+parser.add_argument('--filex', dest='FILEx', action="store", type=str,
                     default='../../data/database_may30_2017/AA_Human_20042005')
-parser.add_argument('--filebx', dest='FILEx2', action="store", type=str,
-                    default='../../data/database_may30_2017/AA_Swine_20042005')
-parser.add_argument('--spa', dest='SP1', action="store", type=str,default='Human',help="Class Name 1")
-parser.add_argument('--spb', dest='SP2', action="store", type=str,default='Swine',help="Class Name 2")
 parser.add_argument('--ntree', dest='NUMTREE', action="store", type=int,default=300,help="Number of trees in rndom forest")
 parser.add_argument('--cores', dest='CORES', action="store", type=int,default=10,help="Number of cores to use in rndom forest")
 parser.add_argument("--plot", type=str2bool, nargs='?',dest='PLOT_',
@@ -65,11 +59,7 @@ parser.add_argument('--treename', dest='TREENAME', action="store", type=str,
 results=parser.parse_args()
 RESPONSE=results.RESPONSE
 FILE=results.FILE
-FILE2=results.FILE2
 FILEx=results.FILEx
-FILEx2=results.FILEx2
-SP1=results.SP1
-SP2=results.SP2
 VERBOSE=results.VERBOSE
 NUMTREE=results.NUMTREE
 CORES=results.CORES
@@ -84,20 +74,19 @@ TREENAME=results.TREENAME
 #------------------------------
 sys.stdout.write(ml.BLUE)
 print "Response variable: ",RESPONSE
-print FILE
-print FILE2
-print FILEx
-print FILEx2
-print "Species names: ",SP1,SP2
+print "training data: ", FILE
+print "test data: ", FILEx
 print "Deleted variables: ", DELETE
 print "Included variables: ", INCLUDE
 sys.stdout.write(ml.RESET)
 #------------------------------
 
-datatrain=ml.setdataframe(FILE,FILE2,
-                          SP1=SP1,SP2=SP2,delete_=DELETE,include_=INCLUDE)
-datatest=ml.setdataframe(FILEx,FILEx2,
-                         SP1=SP1,SP2=SP2,delete_=DELETE,include_=INCLUDE)
+datatrain=ml.setdataframe(FILE,
+                          delete_=DELETE,include_=INCLUDE)
+
+
+datatest=ml.setdataframe(FILEx,
+                         delete_=DELETE,include_=INCLUDE)
 
 CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
                                        datatrain__=datatrain,

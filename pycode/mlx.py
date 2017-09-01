@@ -576,53 +576,30 @@ def visTree(MODEL,PR,PLOT=True,VERBOSE=False,
 #------------------------------------------
 
 
-def setdataframe(file1,file2,outname="",
-                 SP1='Human',SP2='Swine',
-                 delete_=[],include_=[]):
+def setdataframe(file1,outname="",
+                 delete_=[],include_=[],
+                 COLINDEX=None):
 
 
-    D1=pd.read_csv(file1,delimiter=" ",
-                   header=None,engine='python')
+    D1=pd.read_csv(file1,delimiter=",",index_col=0,
+                   engine='python')
 
-    D2=pd.read_csv(file2,delimiter=" ",
-                   header=None,engine='python')
-
-    if D1.shape[0] > D2.shape[0]:
-        D2 = D2.append(D2.sample(n=D1.shape[0]-D2.shape[0], replace=True), ignore_index = True)
-    elif D1.shape[0] < D2.shape[0]:
-        D1 = D1.append(D1.sample(n=D2.shape[0]-D1.shape[0], replace=True), ignore_index = True)
-
-
-
-    if D1.shape[0] != D2.shape[0]:
-        raise ValueError("D1: {}, D2: {}".format(D1.shape[0], D2.shape[0]))
-    POSCOL=D1.index.size
-    NEGCOL=D2.index.size
-
-    X=pd.concat([D1,D2]).values
-    y=np.vstack((-1*np.ones([D1.index.size,1]),
-                 -1*np.ones([D2.index.size,1])))
+    X=D1.values
+    y=-1*np.ones([D1.index.size,1])
     ns_pos=D1.index.size
 
     X_train=X
     nx = X_train.shape[1]
-    y_train=[]
-    for i in np.arange(D1.index.size):
-        y_train.append(SP1)
-    for i in np.arange(D2.index.size):
-        y_train.append(SP2)
 
-    columns = []
-    for i in range(nx):
-        columns.append('x' + str(i))
+    datatrain = pd.DataFrame(X_train,columns=D1.columns).dropna('columns')
 
-    datatrain = pd.DataFrame(X_train,
-                             columns=columns).dropna('columns')
-    datatrain['SPECIES']=y_train
+
+    #sample N columns randomly
+    #add a column parameter alternatively
+    #and only inlcude those columns (COLINDEX)
 
     if len(include_)>0:
         delete_all_but_include_=[item for item in datatrain.columns.values if item not in include_]
-        delete_all_but_include_.remove('SPECIES')
         #print delete_all_but_include_, datatrain.columns.values
         datatrain.drop(delete_all_but_include_,axis=1,inplace=True)
 
