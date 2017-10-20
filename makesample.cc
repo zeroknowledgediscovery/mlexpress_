@@ -67,7 +67,21 @@ vector<option> ignore_numbers(vector<string>& args)
 //--------------------------
 
 
-
+string parse_name(string str)
+{
+  string token;
+  vector<string> vtok;
+  stringstream ss(str);
+  while(getline(ss,token,'_'))
+    vtok.push_back(token);
+  stringstream ss1(vtok[2]);
+  getline(ss1,token,':');
+    
+  if(vtok.size()>2)
+    return vtok[1]+","+token;
+  else
+    return str;
+};
 
 //--------------------------
 
@@ -96,7 +110,7 @@ string quantize(string& line,
       alphabet.insert(char(s+j));
     }
 
-  return token+str;
+  return parse_name(token)+str;
 }
 
 //---------------------------
@@ -121,7 +135,7 @@ int main(int argc,char* argv[])
 {
   string masterfile="master.txt",
     ofile="out.txt",configfile="cfg.cfg";
-  unsigned int PROB_=1;
+  unsigned int PROB_=0;
   vector<double> partition={0.0};
   set<char> alphabet;
 
@@ -187,8 +201,11 @@ int main(int argc,char* argv[])
 
 
   std::random_device rd;  //seed for the random 
-  std::mt19937 gen(rd()); //mersenne_twister_engine 
-  std::uniform_int_distribution<> dist(0,PROB_);
+  std::mt19937 gen(rd()); //mersenne_twister_engine
+  double tmp_=PROB_;
+  if (PROB_==0)
+    tmp_=1; 
+  std::uniform_int_distribution<> dist(0,tmp_);
 
   ifstream IN(masterfile.c_str());
   string line;
@@ -197,12 +214,14 @@ int main(int argc,char* argv[])
   getline(IN,line);
   getline(IN,line);
   ReplaceStringInPlace(line,"\t",",");
-  out << line << endl;
+  ReplaceStringInPlace(line,"SYMBOL","TIME");
+
+  out << "CELL,"<< line << endl;
   getline(IN,line);
   getline(IN,line);
 
   while(getline(IN,line))
-    if (dist(gen)<1)
+    if ((PROB_ == 0) || (dist(gen)<1))
       out << quantize(line,partition,alphabet) << endl;
   
   out.close();
