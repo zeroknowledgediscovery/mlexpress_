@@ -579,10 +579,11 @@ def setdataframe(file1,outname="",
                  select_col=False,
                  rand_col_sel=10,
                  response_var=None,
-                 balance=False):
+                 balance=False,
+                 zerodel=None):
 
     MINCLASSNUM=70
-    D1=pd.read_csv(file1,delimiter=",",index_col=0,
+    D1=pd.read_csv(file1,delimiter=",",index_col=None,
                    engine='python')
     X_train=D1.values
     datatrain = pd.DataFrame(X_train,columns=D1.columns).dropna('columns')
@@ -623,6 +624,7 @@ def setdataframe(file1,outname="",
     
     if len(delete_)>0:
         datatrain.drop(delete_,axis=1,inplace=True)
+
 
     print "(samples,features): ", datatrain.shape, "deleted: ", delete_
 

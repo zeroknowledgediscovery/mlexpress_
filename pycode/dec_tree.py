@@ -37,25 +37,42 @@ parser.add_argument('--file', dest='FILE', action="store", type=str,
                     default='../../data/database_may30_2017/AA_Human_20022003')
 parser.add_argument('--filex', dest='FILEx', action="store", type=str,
                     default='../../data/database_may30_2017/AA_Human_20042005')
-parser.add_argument('--ntree', dest='NUMTREE', action="store", type=int,default=300,help="Number of trees in rndom forest")
-parser.add_argument('--cores', dest='CORES', action="store", type=int,default=10,help="Number of cores to use in rndom forest")
-parser.add_argument('--sample', dest='SAMPLES', action="store", type=int,default=10,help="sample size for columns")
+parser.add_argument('--ntree', dest='NUMTREE',
+                    action="store", type=int,
+                    default=300,help="Number of trees in rndom forest")
+parser.add_argument('--cores', dest='CORES',
+                    action="store", type=int,
+                    default=10,help="Number of cores to use in rndom forest")
+parser.add_argument('--sample', dest='SAMPLES',
+                    action="store", type=int,default=10,help="sample size for columns")
 parser.add_argument("--plot", type=str2bool, nargs='?',dest='PLOT_',
                         const=True, default=False,
                         help="Show plot")
 parser.add_argument("--varimp", type=str2bool, nargs='?',dest='VARIMP',
                         const=True, default=False,
-                        help="Feature importance (experimental")
-
-parser.add_argument('--del', dest='DELETE', action="store", type=str,nargs='+', default='',help="Deleted features")
-parser.add_argument('--inconly', dest='INCLUDEONLY', action="store", type=str,nargs='+', default='',help="Included features, only")
-parser.add_argument('--inc', dest='INCLUDE', action="store", type=str,nargs='+', default='',help="Included features")
+                        help="Feature importance")
+parser.add_argument("--balance", type=str2bool, nargs='?',dest='BALANCE',
+                        const=True, default=False,
+                        help="Balance class frequency of reposnse variable")
+parser.add_argument("--samplefeatures", type=str2bool, nargs='?',dest='SAMPLECOL',
+                        const=True, default=False,
+                        help="Choose a random sample of features")
+parser.add_argument('--del', dest='DELETE',
+                    action="store", type=str,nargs='+', default='',help="Deleted features")
+parser.add_argument('--inconly', dest='INCLUDEONLY',
+                    action="store", type=str,nargs='+',
+                    default='',help="Included features, only")
+parser.add_argument('--inc', dest='INCLUDE',
+                    action="store", type=str,nargs='+', default='',help="Included features")
 parser.add_argument("--verbose", type=str2bool, nargs='?',dest='VERBOSE',
                         const=True, default=False,
                         help="Verbose")
 parser.add_argument('--treename', dest='TREENAME', action="store", type=str,
-                    default='tmp')
-
+                    default='')
+parser.add_argument('--zerodel', dest='ZERODEL',
+                    action="store", type=str,nargs='+',
+                    default='',
+                    help="Delete rows where response is in zerodel")
 
 
 results=parser.parse_args()
@@ -72,6 +89,9 @@ INCLUDE=results.INCLUDE
 INCLUDEONLY=results.INCLUDEONLY
 TREENAME=results.TREENAME
 SAMPLES=results.SAMPLES
+BALANCE=results.BALANCE
+SAMPLECOL=results.SAMPLECOL
+ZERODEL=results.ZERODEL
 
 
 #------------------------------
@@ -92,9 +112,11 @@ if INCLUDE != "":
 datatrain=ml.setdataframe(FILE,
                           delete_=DELETE,
                           include_=INCLUDEONLY,
-                          select_col=True,
+                          select_col=SAMPLECOL,
                           rand_col_sel=SAMPLES,
-                          response_var=RS,balance=False)
+                          response_var=RS,
+                          balance=BALANCE,
+                          zerodel=ZERODEL)
 
 datatest=ml.setdataframe(FILEx,
                          delete_=DELETE,
