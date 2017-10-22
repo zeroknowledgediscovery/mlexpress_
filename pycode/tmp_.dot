@@ -1,0 +1,148 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [ranksep=equally, splines=polyline, bgcolor=gray27, dpi=600] ;
+edge [fontname=helvetica] ;
+LEGEND [label="Response : RPL32
+Classes: A|B|C|D|E|F|G
+In ACC: 0.73
+Out ACC: 0.73
+",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="RPL37A.2
+
+pval: 0.00E+00", fillcolor="#83cfcf"] ;
+2 [label="RPL23A.3
+
+pval: 0.00E+00", fillcolor="#81d2cf"] ;
+3 [label="A
+Prob: 0.04
+Err: 0.0%", fillcolor="#ffc155"] ;
+4 [label="RPS10
+
+pval: 0.00E+00", fillcolor="#7cd2d5"] ;
+5 [label="RPS10
+
+pval: 0.00E+00", fillcolor="#71e0d0"] ;
+6 [label="B
+Prob: 0.11
+Err: 34.62%", fillcolor="#d1fa5d"] ;
+7 [label="RPL37A.2
+
+pval: 0.00E+00", fillcolor="#62dbe2"] ;
+8 [label="E
+Prob: 0.16
+Err: 30.56%", fillcolor="#6399fe"] ;
+9 [label="HUWE1.1
+
+pval: 0.00E+00", fillcolor="#62eeda"] ;
+10 [label="F
+Prob: 0.03
+Err: 57.14%", fillcolor="#ceb6b0"] ;
+11 [label="RPS10
+
+pval: 0.00E+00", fillcolor="#5cf1dc"] ;
+12 [label="RARRES2
+
+pval: 0.00E+00", fillcolor="#5bf7da"] ;
+13 [label="C
+Prob: 0.02
+Err: 66.67%", fillcolor="#8decaa"] ;
+14 [label="RPL37A.2
+
+pval: 0.00E+00", fillcolor="#59f7dc"] ;
+15 [label="RPL23A.3
+
+pval: 2.22E-16", fillcolor="#57f5eb"] ;
+16 [label="D
+Prob: 0.02
+Err: 55.56%", fillcolor="#8dffa7"] ;
+17 [label="RPS10
+
+pval: 2.39E-06", fillcolor="#55f5ee"] ;
+18 [label="C
+Prob: 0.03
+Err: 35.71%", fillcolor="#55ffa5"] ;
+19 [label="RPS10.1
+
+pval: 3.76E-03", fillcolor="#54f4f5"] ;
+20 [label="E
+Prob: 0.02
+Err: 45.45%", fillcolor="#55baff"] ;
+21 [label="TNS3
+
+pval: 2.02E-04", fillcolor="#55f9f4"] ;
+22 [label="D
+Prob: 0.04
+Err: 20.0%", fillcolor="#55ecf8"] ;
+23 [label="HUWE1.1
+
+pval: 5.72E-05", fillcolor="#55fbf3"] ;
+24 [label="RNFT2
+
+pval: 9.74E-07", fillcolor="#55fcf3"] ;
+25 [label="EXOG
+
+pval: 1.74E-02", fillcolor="#55fff5"] ;
+26 [label="D
+Prob: 0.04
+Err: 21.05%", fillcolor="#55ffe1"] ;
+27 [label="STK4
+
+pval: 8.22E-03", fillcolor="#55fffa"] ;
+28 [label="D
+Prob: 0.03
+Err: 20.0%", fillcolor="#55ffe3"] ;
+29 [label="D
+Prob: 0.16
+Err: 0.0%", fillcolor="#55ffff"] ;
+30 [label="D
+Prob: 0.03
+Err: 38.46%", fillcolor="#55ebde"] ;
+31 [label="D
+Prob: 0.02
+Err: 25.0%", fillcolor="#55dfff"] ;
+32 [label="C
+Prob: 0.1
+Err: 40.91%", fillcolor="#60ffa0"] ;
+33 [label="E
+Prob: 0.03
+Err: 33.33%", fillcolor="#6b94ff"] ;
+34 [label="F
+Prob: 0.1
+Err: 27.08%", fillcolor="#d068ff"] ;
+35 [label="G
+Prob: 0.02
+Err: 0.0%", fillcolor="#ff55c9"] ;
+1 -> 2 [label="ACBEDF",fontcolor=deepskyblue2] ;
+1 -> 35 [label="G",fontcolor=deepskyblue2] ;
+2 -> 3 [label="A",fontcolor=deepskyblue2] ;
+2 -> 4 [label="CBEDGF",fontcolor=deepskyblue2] ;
+4 -> 34 [label="F",fontcolor=deepskyblue2] ;
+4 -> 5 [label="ACBED",fontcolor=deepskyblue2] ;
+5 -> 6 [label="AB",fontcolor=deepskyblue2] ;
+5 -> 7 [label="CED",fontcolor=deepskyblue2] ;
+7 -> 8 [label="E",fontcolor=deepskyblue2] ;
+7 -> 9 [label="CBDF",fontcolor=deepskyblue2] ;
+9 -> 10 [label="BF",fontcolor=deepskyblue2] ;
+9 -> 11 [label="CED",fontcolor=deepskyblue2] ;
+11 -> 33 [label="E",fontcolor=deepskyblue2] ;
+11 -> 12 [label="CD",fontcolor=deepskyblue2] ;
+12 -> 13 [label="AG",fontcolor=deepskyblue2] ;
+12 -> 14 [label="CBEDF",fontcolor=deepskyblue2] ;
+14 -> 32 [label="C",fontcolor=deepskyblue2] ;
+14 -> 15 [label="BD",fontcolor=deepskyblue2] ;
+15 -> 16 [label="BE",fontcolor=deepskyblue2] ;
+15 -> 17 [label="CD",fontcolor=deepskyblue2] ;
+17 -> 18 [label="C",fontcolor=deepskyblue2] ;
+17 -> 19 [label="D",fontcolor=deepskyblue2] ;
+19 -> 20 [label="EF",fontcolor=deepskyblue2] ;
+19 -> 21 [label="CD",fontcolor=deepskyblue2] ;
+21 -> 22 [label="AB",fontcolor=deepskyblue2] ;
+21 -> 23 [label="CEDGF",fontcolor=deepskyblue2] ;
+23 -> 24 [label="D",fontcolor=deepskyblue2] ;
+23 -> 31 [label="CE",fontcolor=deepskyblue2] ;
+24 -> 25 [label="ACEDF",fontcolor=deepskyblue2] ;
+24 -> 30 [label="BG",fontcolor=deepskyblue2] ;
+25 -> 26 [label="ABG",fontcolor=deepskyblue2] ;
+25 -> 27 [label="CEDF",fontcolor=deepskyblue2] ;
+27 -> 28 [label="AE",fontcolor=deepskyblue2] ;
+27 -> 29 [label="CBDGF",fontcolor=deepskyblue2] ;
+{rank = same; 3;6;8;10;13;16;18;20;22;26;28;29;30;31;32;33;34;35;}{rank = same; LEGEND;1;}}

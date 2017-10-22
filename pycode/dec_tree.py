@@ -39,6 +39,7 @@ parser.add_argument('--filex', dest='FILEx', action="store", type=str,
                     default='../../data/database_may30_2017/AA_Human_20042005')
 parser.add_argument('--ntree', dest='NUMTREE', action="store", type=int,default=300,help="Number of trees in rndom forest")
 parser.add_argument('--cores', dest='CORES', action="store", type=int,default=10,help="Number of cores to use in rndom forest")
+parser.add_argument('--sample', dest='SAMPLES', action="store", type=int,default=10,help="sample size for columns")
 parser.add_argument("--plot", type=str2bool, nargs='?',dest='PLOT_',
                         const=True, default=False,
                         help="Show plot")
@@ -47,6 +48,7 @@ parser.add_argument("--varimp", type=str2bool, nargs='?',dest='VARIMP',
                         help="Feature importance (experimental")
 
 parser.add_argument('--del', dest='DELETE', action="store", type=str,nargs='+', default='',help="Deleted features")
+parser.add_argument('--inconly', dest='INCLUDEONLY', action="store", type=str,nargs='+', default='',help="Included features, only")
 parser.add_argument('--inc', dest='INCLUDE', action="store", type=str,nargs='+', default='',help="Included features")
 parser.add_argument("--verbose", type=str2bool, nargs='?',dest='VERBOSE',
                         const=True, default=False,
@@ -67,8 +69,9 @@ VARIMP=results.VARIMP
 PLOT=results.PLOT_
 DELETE=results.DELETE
 INCLUDE=results.INCLUDE
+INCLUDEONLY=results.INCLUDEONLY
 TREENAME=results.TREENAME
-
+SAMPLES=results.SAMPLES
 
 
 #------------------------------
@@ -77,16 +80,25 @@ print "Response variable: ",RESPONSE
 print "training data: ", FILE
 print "test data: ", FILEx
 print "Deleted variables: ", DELETE
+print "Included variables (only): ", INCLUDEONLY
 print "Included variables: ", INCLUDE
+print "Column samples: ", SAMPLES
 sys.stdout.write(ml.RESET)
 #------------------------------
+RS=[RESPONSE]
+if INCLUDE != "":
+    RS.extend(INCLUDE)
 
 datatrain=ml.setdataframe(FILE,
-                          delete_=DELETE,include_=INCLUDE)
-
+                          delete_=DELETE,
+                          include_=INCLUDEONLY,
+                          select_col=True,
+                          rand_col_sel=SAMPLES,
+                          response_var=RS,balance=False)
 
 datatest=ml.setdataframe(FILEx,
-                         delete_=DELETE,include_=INCLUDE)
+                         delete_=DELETE,
+                         include_=datatrain.columns)
 
 CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
                                        datatrain__=datatrain,

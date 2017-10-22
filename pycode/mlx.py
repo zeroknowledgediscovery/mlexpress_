@@ -227,8 +227,6 @@ def getParent(children,nodeid_):
 def add_edge_conditions(edge_cond_,
                         path_to_root_,
                         cond_list_):
-    if DEBUG__:
-        print "@@@@@@@ in add_edge_conditions  ", path_to_root
     for cnd in cond_list_:
         edge_cond_[(path_to_root_[-1],
                     path_to_root_[-2])]=cnd
@@ -292,7 +290,7 @@ def feature_importance(significant_dec_path,
                        class_vector_):
 
     feature_imp={}
-    print significant_dec_path
+    print "Significant decision paths: ",significant_dec_path
     for key__,path__ in significant_dec_path.items():
         old_num=0
         augmented_path=[]
@@ -328,8 +326,8 @@ def visTree(MODEL,PR,PLOT=True,VERBOSE=False,
     tprob_significant={key__:tval for key__,tval in tprob.items()
                        if tval >= PROB_MIN}
 
-    if DEBUG__:
-        print "########## ", tprob_significant
+    #if DEBUG__:
+    #    print "########## ", tprob_significant
 
     RLS_=[[ i.split('%in%')
             for i in j.split('&')]
@@ -578,32 +576,51 @@ def visTree(MODEL,PR,PLOT=True,VERBOSE=False,
 
 def setdataframe(file1,outname="",
                  delete_=[],include_=[],
-                 COLINDEX=None):
+                 select_col=False,
+                 rand_col_sel=10,
+                 response_var=None,
+                 balance=False):
 
-
+    MINCLASSNUM=70
     D1=pd.read_csv(file1,delimiter=",",index_col=0,
                    engine='python')
-
-    X=D1.values
-    y=-1*np.ones([D1.index.size,1])
-    ns_pos=D1.index.size
-
-    X_train=X
-    nx = X_train.shape[1]
-
+    X_train=D1.values
     datatrain = pd.DataFrame(X_train,columns=D1.columns).dropna('columns')
 
+    if balance:
+        DD={}
+        DDlen=[]
+        if response_var is not None:
+            valset=set(datatrain[response_var[0]].values)
+            for i in valset:
+                dd=datatrain[datatrain[response_var[0]]==i]
+                DD[len(dd.index.values)]=dd
+                DDlen.append(len(dd.index.values))
+            DDlen=np.sort(np.array(DDlen))
 
-    #sample N columns randomly
-    #add a column parameter alternatively
-    #and only inlcude those columns (COLINDEX)
+            DDlen=DDlen[DDlen>MINCLASSNUM]
+            minlen=DDlen[0]
+            
+            DD__=[DD[minlen]]
+            for i in DDlen[1:]:
+                DD__.append(DD[i].sample(n=minlen))
+            datatrain=pd.concat(DD__)
+            sys.stdout.write(PURPLE)
+            print "Balancing complete: ",DDlen, len(datatrain.index.values)
+            sys.stdout.write(WHITE)
+
 
     if len(include_)>0:
         delete_all_but_include_=[item for item in datatrain.columns.values if item not in include_]
-        #print delete_all_but_include_, datatrain.columns.values
         datatrain.drop(delete_all_but_include_,axis=1,inplace=True)
 
-
+    if select_col:
+        datatrain_tmp=datatrain.sample(n=rand_col_sel,axis=1)
+        for r in response_var:
+            if r not in datatrain_tmp.columns:
+                datatrain_tmp[r]=datatrain[r]
+        datatrain=datatrain_tmp
+    
     if len(delete_)>0:
         datatrain.drop(delete_,axis=1,inplace=True)
 
