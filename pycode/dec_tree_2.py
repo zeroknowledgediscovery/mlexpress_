@@ -15,6 +15,7 @@ import argparse
 import sparkline
 import warnings
 import tempfile
+import operator
 
 warnings.filterwarnings("ignore")
 
@@ -110,62 +111,49 @@ if INCLUDE != "":
     RS.extend(INCLUDE)
 INPUTFILE_=""
 
-datatrain=ml.setdataframe(FILE,outname=INPUTFILE_,
-                          delete_=DELETE,
-                          include_=INCLUDEONLY,
-                          select_col=SAMPLECOL,
-                          rand_col_sel=SAMPLES,
-                          response_var=RS,
-                          balance=BALANCE,
-                          zerodel=ZERODEL)
+TR=[]
+
+STR=[]
+
+while TR is not None:
+    datatrain=ml.setdataframe(FILE,outname=INPUTFILE_,
+                              delete_=DELETE,
+                              include_=INCLUDEONLY,
+                              select_col=SAMPLECOL,
+                              rand_col_sel=SAMPLES,
+                              response_var=RS,
+                              balance=BALANCE,
+                              zerodel=ZERODEL)
+    
+    
+    datatest=ml.setdataframe(FILEx,
+                             include_=datatrain.columns,
+                             response_var=RS,
+                             zerodel=ZERODEL)
+    
+    
+    
+    CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
+                                           datatrain__=datatrain,
+                                           datatest__=datatest,
+                                           VERBOSE=VERBOSE,TREE_EXPORT=False)
+    
+
+    if TR is not None:
+        
+        sorted_feature_imp = sorted(TR.significant_feature_weight_.items(), key=operator.itemgetter(1))
+        STR.append(sorted_feature_imp[-1][0]+"->"+RS[0])
+        print sorted_feature_imp[-1][0]+"->"+RS[0]
+
+        if RS==[sorted_feature_imp[-1][0]]:
+            TR=None
+        else:
+            RS=[sorted_feature_imp[-1][0]]
+        
 
 
-datatest=ml.setdataframe(FILEx,
-                         include_=datatrain.columns,
-                         response_var=RS,
-                         zerodel=ZERODEL)
-
-
-
-CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
-                                       datatrain__=datatrain,
-                                       datatest__=datatest,
-                                       VERBOSE=VERBOSE,TREE_EXPORT=False)
-
-#---------  PRINT -------------
-sys.stdout.write(ml.RED)
-print
-print "DECISION TREE ACCURACY "
-print "ACC (in  sample): ",ACC
-print "ACC (out sample): ",ACCx
-
-sys.stdout.write(ml.CYAN)
-print "IN SAMPLE CONFUSION MATRIX:"
-print CF
-if CFx is not None:
-    print
-    print "OUT SAMPLE CONFUSION MATRIX:"
-    print CFx
-    sys.stdout.write(ml.RESET)
-sys.stdout.write(ml.RESET)
-
-sys.stdout.write(ml.CYAN)
-if VERBOSE:
-    print Pr.head()
-    print Prx.head()
-
-#TR=ml.visTree(CT,Pr,PLOT,True)
-if TR is not None:
-    ml.tree_export(TR,TYPE='polyline',
-                   outfilename=TREENAME+"_.dot",LIGHT=1.5,BGCOLOR='gray27')
-    if VARIMP:
-        print "Feature Importance:"
-        ml.pp.pprint(TR.significant_feature_weight_)
-else:
-    print 'EMPTY RULES RETURNED BY CTREE'
-
-
+        
 sys.stdout.write(ml.RESET)
 #------------ EOF
-
+ 
 

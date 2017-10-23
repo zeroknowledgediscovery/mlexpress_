@@ -290,7 +290,7 @@ def feature_importance(significant_dec_path,
                        class_vector_):
 
     feature_imp={}
-    print "Significant decision paths: ",significant_dec_path
+    #print "Significant decision paths: ",significant_dec_path
     for key__,path__ in significant_dec_path.items():
         old_num=0
         augmented_path=[]
@@ -578,10 +578,11 @@ def setdataframe(file1,outname="",
                  delete_=[],include_=[],
                  select_col=False,
                  rand_col_sel=10,
-                 response_var=None,
+                 response_var=[],
                  balance=False,
-                 zerodel=None):
-
+                 zerodel=[],
+                 VERBOSE=False):
+    
     MINCLASSNUM=70
     D1=pd.read_csv(file1,delimiter=",",index_col=None,
                    engine='python')
@@ -625,8 +626,13 @@ def setdataframe(file1,outname="",
     if len(delete_)>0:
         datatrain.drop(delete_,axis=1,inplace=True)
 
+    for val in zerodel:
+        datatrain=datatrain[datatrain.eval(response_var[0]) != val]
 
-    print "(samples,features): ", datatrain.shape, "deleted: ", delete_
+    datatrain=datatrain.reset_index()
+
+    if VERBOSE:
+        print "(samples,features): ", datatrain.shape, "deleted: ", delete_
 
     if outname != "":
         datatrain.to_csv(outname,index=False)
@@ -999,3 +1005,4 @@ def randomForestX(RESPONSE__,
 
 
     return RF,PrRF,ACCRF,CFRF,PrxRF,ACCxRF,CFxRF,RFimp,EFI
+#---------------------------------------------------------------

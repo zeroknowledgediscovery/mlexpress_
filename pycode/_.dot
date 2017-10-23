@@ -1,0 +1,52 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [ranksep=equally, splines=polyline, bgcolor=gray27, dpi=600] ;
+edge [fontname=helvetica] ;
+LEGEND [label="Response : HSPD1
+Classes: A|B|D|E
+In ACC: 0.73
+Out ACC: 0.73
+",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="DNAJB1
+
+pval: 0.00E+00", fillcolor="#c9b19d"] ;
+2 [label="EBNA1BP2
+
+pval: 6.16E-14", fillcolor="#b4d972"] ;
+3 [label="A
+Prob: 0.4
+Err: 30.36%", fillcolor="#d1d355"] ;
+4 [label="CDK4
+
+pval: 1.83E-03", fillcolor="#87e1a0"] ;
+5 [label="A
+Prob: 0.07
+Err: 50.0%", fillcolor="#b2de66"] ;
+6 [label="POLG2
+
+pval: 2.34E-02", fillcolor="#76e3b7"] ;
+7 [label="B
+Prob: 0.06
+Err: 50.0%", fillcolor="#8acfaa"] ;
+8 [label="D
+Prob: 0.13
+Err: 38.89%", fillcolor="#6debbc"] ;
+9 [label="IARS2
+
+pval: 9.27E-12", fillcolor="#f265f0"] ;
+10 [label="E
+Prob: 0.29
+Err: 2.5%", fillcolor="#fb59fa"] ;
+11 [label="E
+Prob: 0.06
+Err: 50.0%", fillcolor="#c49fbf"] ;
+1 -> 9 [label="E",fontcolor=deepskyblue2] ;
+1 -> 2 [label="ACBD",fontcolor=deepskyblue2] ;
+2 -> 3 [label="AB",fontcolor=deepskyblue2] ;
+2 -> 4 [label="CED",fontcolor=deepskyblue2] ;
+4 -> 5 [label="AB",fontcolor=deepskyblue2] ;
+4 -> 6 [label="CED",fontcolor=deepskyblue2] ;
+6 -> 8 [label="CB",fontcolor=deepskyblue2] ;
+6 -> 7 [label="AED",fontcolor=deepskyblue2] ;
+9 -> 10 [label="A",fontcolor=deepskyblue2] ;
+9 -> 11 [label="CBE",fontcolor=deepskyblue2] ;
+{rank = same; 3;5;7;8;10;11;}{rank = same; LEGEND;1;}}
