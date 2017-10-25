@@ -2,51 +2,107 @@ digraph Tree {
 node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
 graph [ranksep=equally, splines=polyline, bgcolor=gray27, dpi=600] ;
 edge [fontname=helvetica] ;
-LEGEND [label="Response : HSPD1
-Classes: A|B|D|E
-In ACC: 0.73
-Out ACC: 0.73
-",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="DNAJB1
+LEGEND [label="Response : EGFR
+Classes: A|C
+In ACC: 0.76
+Out ACC: 0.76
+",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="FOSL1
 
-pval: 0.00E+00", fillcolor="#c9b19d"] ;
-2 [label="EBNA1BP2
+pval: 1.58E-13", fillcolor="#abd5a8"] ;
+2 [label="PDS5A
 
-pval: 6.16E-14", fillcolor="#b4d972"] ;
-3 [label="A
-Prob: 0.4
-Err: 30.36%", fillcolor="#d1d355"] ;
-4 [label="CDK4
+pval: 1.07E-06", fillcolor="#b9d29a"] ;
+3 [label="SNX13
 
-pval: 1.83E-03", fillcolor="#87e1a0"] ;
-5 [label="A
+pval: 1.55E-05", fillcolor="#c0d093"] ;
+4 [label="C
+Prob: 0.05
+Err: 19.23%", fillcolor="#75e2de"] ;
+5 [label="MYO10
+
+pval: 3.57E-05", fillcolor="#c6cf8d"] ;
+6 [label="SSBP2
+
+pval: 4.72E-02", fillcolor="#ebc568"] ;
+7 [label="A
+Prob: 0.08
+Err: 20.0%", fillcolor="#ddc977"] ;
+8 [label="FUT1
+
+pval: 1.20E-02", fillcolor="#f7c25c"] ;
+9 [label="A
+Prob: 0.04
+Err: 9.09%", fillcolor="#efc464"] ;
+10 [label="A
+Prob: 0.05
+Err: 0.0%", fillcolor="#ffc155"] ;
+11 [label="PCBD1
+
+pval: 1.13E-03", fillcolor="#b9d29a"] ;
+12 [label="TSPAN3
+
+pval: 2.30E-03", fillcolor="#c3cf90"] ;
+13 [label="NFKBIE
+
+pval: 1.74E-02", fillcolor="#eec565"] ;
+14 [label="A
 Prob: 0.07
-Err: 50.0%", fillcolor="#b2de66"] ;
-6 [label="POLG2
+Err: 16.22%", fillcolor="#e3c770"] ;
+15 [label="A
+Prob: 0.05
+Err: 0.0%", fillcolor="#ffc155"] ;
+16 [label="A
+Prob: 0.34
+Err: 44.64%", fillcolor="#b3d3a0"] ;
+17 [label="C
+Prob: 0.07
+Err: 21.21%", fillcolor="#79e2da"] ;
+18 [label="C
+Prob: 0.07
+Err: 16.22%", fillcolor="#70e4e3"] ;
+19 [label="MYO10
 
-pval: 2.34E-02", fillcolor="#76e3b7"] ;
-7 [label="B
-Prob: 0.06
-Err: 50.0%", fillcolor="#8acfaa"] ;
-8 [label="D
-Prob: 0.13
-Err: 38.89%", fillcolor="#6debbc"] ;
-9 [label="IARS2
+pval: 3.80E-04", fillcolor="#68e6eb"] ;
+20 [label="A
+Prob: 0.03
+Err: 46.15%", fillcolor="#b0d4a3"] ;
+21 [label="FAM20B
 
-pval: 9.27E-12", fillcolor="#f265f0"] ;
-10 [label="E
-Prob: 0.29
-Err: 2.5%", fillcolor="#fb59fa"] ;
-11 [label="E
-Prob: 0.06
-Err: 50.0%", fillcolor="#c49fbf"] ;
-1 -> 9 [label="E",fontcolor=deepskyblue2] ;
-1 -> 2 [label="ACBD",fontcolor=deepskyblue2] ;
+pval: 1.95E-05", fillcolor="#5be9f8"] ;
+22 [label="ISOC1
+
+pval: 3.82E-03", fillcolor="#62e7f1"] ;
+23 [label="C
+Prob: 0.03
+Err: 0.0%", fillcolor="#55ebff"] ;
+24 [label="C
+Prob: 0.05
+Err: 12.5%", fillcolor="#6ae5e9"] ;
+25 [label="C
+Prob: 0.07
+Err: 0.0%", fillcolor="#55ebff"] ;
+1 -> 2 [label="AB",fontcolor=deepskyblue2] ;
+1 -> 19 [label="C",fontcolor=deepskyblue2] ;
+2 -> 18 [label="C",fontcolor=deepskyblue2] ;
 2 -> 3 [label="AB",fontcolor=deepskyblue2] ;
-2 -> 4 [label="CED",fontcolor=deepskyblue2] ;
-4 -> 5 [label="AB",fontcolor=deepskyblue2] ;
-4 -> 6 [label="CED",fontcolor=deepskyblue2] ;
-6 -> 8 [label="CB",fontcolor=deepskyblue2] ;
-6 -> 7 [label="AED",fontcolor=deepskyblue2] ;
-9 -> 10 [label="A",fontcolor=deepskyblue2] ;
-9 -> 11 [label="CBE",fontcolor=deepskyblue2] ;
-{rank = same; 3;5;7;8;10;11;}{rank = same; LEGEND;1;}}
+3 -> 4 [label="A",fontcolor=deepskyblue2] ;
+3 -> 5 [label="CB",fontcolor=deepskyblue2] ;
+5 -> 11 [label="CB",fontcolor=deepskyblue2] ;
+5 -> 6 [label="A",fontcolor=deepskyblue2] ;
+6 -> 8 [label="B",fontcolor=deepskyblue2] ;
+6 -> 7 [label="AC",fontcolor=deepskyblue2] ;
+8 -> 9 [label="AB",fontcolor=deepskyblue2] ;
+8 -> 10 [label="C",fontcolor=deepskyblue2] ;
+11 -> 17 [label="C",fontcolor=deepskyblue2] ;
+11 -> 12 [label="AB",fontcolor=deepskyblue2] ;
+12 -> 16 [label="CB",fontcolor=deepskyblue2] ;
+12 -> 13 [label="A",fontcolor=deepskyblue2] ;
+13 -> 14 [label="AC",fontcolor=deepskyblue2] ;
+13 -> 15 [label="B",fontcolor=deepskyblue2] ;
+19 -> 20 [label="A",fontcolor=deepskyblue2] ;
+19 -> 21 [label="CB",fontcolor=deepskyblue2] ;
+21 -> 25 [label="C",fontcolor=deepskyblue2] ;
+21 -> 22 [label="AB",fontcolor=deepskyblue2] ;
+22 -> 24 [label="CB",fontcolor=deepskyblue2] ;
+22 -> 23 [label="A",fontcolor=deepskyblue2] ;
+{rank = same; 4;7;9;10;14;15;16;17;18;20;23;24;25;}{rank = same; LEGEND;1;}}

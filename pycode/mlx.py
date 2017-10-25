@@ -27,6 +27,7 @@ pp = pprint.PrettyPrinter(indent=4)
 
 DEBUG=False
 DEBUG__=False
+DEBUG___=False
 
 WHITE   = "\033[0;37m"
 RED   = "\033[0;31m"
@@ -451,7 +452,7 @@ def visTree(MODEL,PR,PLOT=True,VERBOSE=False,
             print 'rl: ', rl
 
         for edg in rl:
-            if DEBUG__:
+            if DEBUG___:
                 print 'edg: ', edg
 
             var_node_=edg[0].strip()
@@ -629,7 +630,7 @@ def setdataframe(file1,outname="",
     for val in zerodel:
         datatrain=datatrain[datatrain.eval(response_var[0]) != val]
 
-    datatrain=datatrain.reset_index()
+    datatrain=datatrain.reset_index().drop('index', axis=1)
 
     if VERBOSE:
         print "(samples,features): ", datatrain.shape, "deleted: ", delete_

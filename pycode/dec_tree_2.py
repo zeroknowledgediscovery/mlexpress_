@@ -31,7 +31,7 @@ def str2bool(v):
 
 
 parser = argparse.ArgumentParser(description='Example with non-optional arguments')
- 
+
 parser.add_argument('--response', dest='RESPONSE', action="store", type=str,
                     default='SPECIES',help="Response Variable")
 parser.add_argument('--file', dest='FILE', action="store", type=str,
@@ -47,17 +47,17 @@ parser.add_argument('--cores', dest='CORES',
 parser.add_argument('--sample', dest='SAMPLES',
                     action="store", type=int,default=10,help="sample size for columns")
 parser.add_argument("--plot", type=str2bool, nargs='?',dest='PLOT_',
-                        const=True, default=False,
-                        help="Show plot")
+                    const=True, default=False,
+                    help="Show plot")
 parser.add_argument("--varimp", type=str2bool, nargs='?',dest='VARIMP',
-                        const=True, default=False,
-                        help="Feature importance")
+                    const=True, default=False,
+                    help="Feature importance")
 parser.add_argument("--balance", type=str2bool, nargs='?',dest='BALANCE',
-                        const=True, default=False,
-                        help="Balance class frequency of reposnse variable")
+                    const=True, default=False,
+                    help="Balance class frequency of reposnse variable")
 parser.add_argument("--samplefeatures", type=str2bool, nargs='?',dest='SAMPLECOL',
-                        const=True, default=False,
-                        help="Choose a random sample of features")
+                    const=True, default=False,
+                    help="Choose a random sample of features")
 parser.add_argument('--del', dest='DELETE',
                     action="store", type=str,nargs='+', default='',help="Deleted features")
 parser.add_argument('--inconly', dest='INCLUDEONLY',
@@ -66,8 +66,8 @@ parser.add_argument('--inconly', dest='INCLUDEONLY',
 parser.add_argument('--inc', dest='INCLUDE',
                     action="store", type=str,nargs='+', default='',help="Included features")
 parser.add_argument("--verbose", type=str2bool, nargs='?',dest='VERBOSE',
-                        const=True, default=False,
-                        help="Verbose")
+                    const=True, default=False,
+                    help="Verbose")
 parser.add_argument('--treename', dest='TREENAME', action="store", type=str,
                     default='')
 parser.add_argument('--zerodel', dest='ZERODEL',
@@ -96,63 +96,37 @@ ZERODEL=results.ZERODEL
 
 
 #------------------------------
-sys.stdout.write(ml.BLUE)
-print "Response variable: ",RESPONSE
-print "training data: ", FILE
-print "test data: ", FILEx
-print "Deleted variables: ", DELETE
-print "Included variables (only): ", INCLUDEONLY
-print "Included variables: ", INCLUDE
-print "Column samples: ", SAMPLES
-sys.stdout.write(ml.RESET)
 #------------------------------
 RS=[RESPONSE]
 if INCLUDE != "":
-    RS.extend(INCLUDE)
+    INCLUDE=list(set(list(set(INCLUDE)).extend(RS)))
+    
 INPUTFILE_=""
-
-TR=[]
-
-STR=[]
-
-while TR is not None:
-    datatrain=ml.setdataframe(FILE,outname=INPUTFILE_,
-                              delete_=DELETE,
-                              include_=INCLUDEONLY,
-                              select_col=SAMPLECOL,
-                              rand_col_sel=SAMPLES,
-                              response_var=RS,
-                              balance=BALANCE,
-                              zerodel=ZERODEL)
     
-    
-    datatest=ml.setdataframe(FILEx,
-                             include_=datatrain.columns,
-                             response_var=RS,
-                             zerodel=ZERODEL)
-    
-    
-    
-    CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
-                                           datatrain__=datatrain,
-                                           datatest__=datatest,
-                                           VERBOSE=VERBOSE,TREE_EXPORT=False)
-    
+datatrain=ml.setdataframe(FILE,outname=INPUTFILE_,
+                          delete_=DELETE,
+                          include_=INCLUDEONLY,
+                          select_col=SAMPLECOL,
+                          rand_col_sel=SAMPLES,
+                          response_var=RS,
+                          balance=BALANCE,
+                          zerodel=ZERODEL)
 
-    if TR is not None:
-        
-        sorted_feature_imp = sorted(TR.significant_feature_weight_.items(), key=operator.itemgetter(1))
-        STR.append(sorted_feature_imp[-1][0]+"->"+RS[0])
-        print sorted_feature_imp[-1][0]+"->"+RS[0]
+datatest=ml.setdataframe(FILEx,
+                         include_=datatrain.columns,
+                         response_var=RS,
+                         zerodel=ZERODEL)
 
-        if RS==[sorted_feature_imp[-1][0]]:
-            TR=None
-        else:
-            RS=[sorted_feature_imp[-1][0]]
-        
-
-
-        
+CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
+                                       datatrain__=datatrain,
+                                       datatest__=datatest,
+                                       VERBOSE=VERBOSE,
+                                       TREE_EXPORT=False)
+if TR is not None:
+    sorted_feature_imp = sorted(TR.significant_feature_weight_.items(),
+                                key=operator.itemgetter(1))
+    print sorted_feature_imp[-1][0]+" -> "+RS[0]
+    
 sys.stdout.write(ml.RESET)
 #------------ EOF
  

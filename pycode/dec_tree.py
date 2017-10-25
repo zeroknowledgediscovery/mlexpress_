@@ -108,7 +108,7 @@ sys.stdout.write(ml.RESET)
 RS=[RESPONSE]
 if INCLUDE != "":
     RS.extend(INCLUDE)
-INPUTFILE_=""
+INPUTFILE_="tmp.csv"
 
 datatrain=ml.setdataframe(FILE,outname=INPUTFILE_,
                           delete_=DELETE,
@@ -117,7 +117,8 @@ datatrain=ml.setdataframe(FILE,outname=INPUTFILE_,
                           rand_col_sel=SAMPLES,
                           response_var=RS,
                           balance=BALANCE,
-                          zerodel=ZERODEL)
+                          zerodel=ZERODEL,
+                          VERBOSE=True)
 
 
 datatest=ml.setdataframe(FILEx,
