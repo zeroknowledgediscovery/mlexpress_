@@ -12,15 +12,22 @@ fi
 if [ $# -gt 3 ] ; then 
     FILE=$4
 fi
+if [ $# -gt 4 ] ; then 
+    DEL=$5
+fi
 
 if [ $RESET -eq 1 ] ; then 
     echo -n '' > $RES
 fi
+
+
+
+
 STOP=0
 
 while [ $STOP -eq 0 ]
 do
-    PROG='./dec_tree_2.py --file '"$FILE"' --filex '"$FILE"' --varimp True --response '"$FEATURE"' --zerodel B --del CELL'
+    PROG='/home/ishanu/ZED/Research/mlexpress_/pycode/dec_tree_2.py --file '"$FILE"' --filex '"$FILE"' --varimp True --response '"$FEATURE"' --zerodel B --del CELL '"$DEL"
 
     tmp0=`$PROG`
     tmp=`echo $tmp0 | awk '{print $1,$2,$3}'`
