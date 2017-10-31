@@ -39,6 +39,18 @@ GREEN = "\033[0;32m"
 RESET = "\033[0;0m"
 BOLD    = "\033[;1m"
 REVERSE = "\033[;7m"
+
+WHITE   = ""
+RED   = ""
+YELLOW  = ""
+PURPLE  = ""
+BLUE  = ""
+CYAN  = ""
+GREEN = ""
+RESET = ""
+BOLD    = ""
+REVERSE = ""
+
 #------------------------------------------
 filled=True #///added
 rounded=True

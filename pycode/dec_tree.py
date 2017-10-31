@@ -158,7 +158,7 @@ if VERBOSE:
 #TR=ml.visTree(CT,Pr,PLOT,True)
 if TR is not None:
     ml.tree_export(TR,TYPE='polyline',
-                   outfilename=TREENAME+"_.dot",LIGHT=1.5,BGCOLOR='gray27')
+                   outfilename=TREENAME+"_.dot",LIGHT=1.5)
     if VARIMP:
         print "Feature Importance:"
         ml.pp.pprint(TR.significant_feature_weight_)

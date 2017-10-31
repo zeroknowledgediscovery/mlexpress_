@@ -125,7 +125,11 @@ CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
 if TR is not None:
     sorted_feature_imp = sorted(TR.significant_feature_weight_.items(),
                                 key=operator.itemgetter(1))
-    print sorted_feature_imp[-1][0]+" -> "+RS[0]
+    for i in sorted_feature_imp:
+        if i[1] > 0.2:
+            print i[0],RS[0],i[1]
+else:
+    print "XX",RS[0],0.0
     
 sys.stdout.write(ml.RESET)
 #------------ EOF
