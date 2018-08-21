@@ -1,1 +1,3 @@
 digraph {
+	graph [ranksep=equally, splines=polyline, bgcolor=transparent, dpi=600,fontcolor="white"] ;
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica,fontcolor=white] ;

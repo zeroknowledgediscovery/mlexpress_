@@ -74,6 +74,10 @@ parser.add_argument('--zerodel', dest='ZERODEL',
                     action="store", type=str,nargs='+',
                     default='',
                     help="Delete rows where response is in zerodel")
+parser.add_argument('--importance_threshold', dest='FEATURE_IMP_THRESHOLD',
+                    action="store", type=float,
+                    default=0.2,
+                    help="Feature importance threshold: default 0.2")
 
 
 results=parser.parse_args()
@@ -93,7 +97,7 @@ SAMPLES=results.SAMPLES
 BALANCE=results.BALANCE
 SAMPLECOL=results.SAMPLECOL
 ZERODEL=results.ZERODEL
-
+FEATURE_IMP_THRESHOLD=results.FEATURE_IMP_THRESHOLD
 
 #------------------------------
 #------------------------------
@@ -126,7 +130,7 @@ if TR is not None:
     sorted_feature_imp = sorted(TR.significant_feature_weight_.items(),
                                 key=operator.itemgetter(1))
     for i in sorted_feature_imp:
-        if i[1] > 0.2:
+        if i[1] > FEATURE_IMP_THRESHOLD:
             print i[0],RS[0],i[1]
 else:
     print "XX",RS[0],0.0
