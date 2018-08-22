@@ -191,7 +191,9 @@ while RS is not None:
 
     df1=pd.DataFrame.from_dict(edges,orient='index')
     df1.columns=['imp']
+    df1=df1[df1.imp>0.0]
+    
     df=df.append(df1)
-    df[df.imp>0.0].to_csv(EDGEFILE,header=None,sep=",")
+    df.to_csv(EDGEFILE,header=None,sep=",")
 
      
