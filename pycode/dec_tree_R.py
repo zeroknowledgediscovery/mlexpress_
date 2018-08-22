@@ -205,7 +205,10 @@ while RS is not None:
     df.to_csv(EDGEFILE,header=None,sep=",")
 
 print(dot.source)
+dot.node(RESPONSE,shape='circle')
+dot.node(RESPONSE,style='filled')
+dot.node(RESPONSE,fillcolor='red')
 DOTFILE=EDGEFILE+'.dot'
-f1=open(DOTFILE, 'w+')
+f1=open(DOTFILE,'w+')
 f1.write(dot.source)
 f1.close()
