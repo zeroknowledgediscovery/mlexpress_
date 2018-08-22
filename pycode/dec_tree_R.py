@@ -172,9 +172,6 @@ while RS is not None:
     pool.close()
     pool.join()
 
-    if DEBUG:
-        print edges__
-
     for edges_ in edges__:
         SOURCES_,PROCESSED_ = processEdgeUpdate(edges_)
         edges.update(edges_)    
@@ -191,7 +188,7 @@ while RS is not None:
         RS=None
 
     if DEBUG:
-        print "CURRENT RS--> ", RS, PROCESSED, SOURCES
+        print "CURRENT RS--> ", RS
 
     for key,values in edges.iteritems():
             if key[0] is not "":
@@ -205,9 +202,9 @@ while RS is not None:
     df.to_csv(EDGEFILE,header=None,sep=",")
 
 print(dot.source)
-dot.node(RESPONSE,shape='circle')
-dot.node(RESPONSE,style='filled')
-dot.node(RESPONSE,fillcolor='red')
+dot.node(RESPONSE[0],shape='circle')
+dot.node(RESPONSE[0],style='filled')
+dot.node(RESPONSE[0],fillcolor='red')
 DOTFILE=EDGEFILE+'.dot'
 f1=open(DOTFILE,'w+')
 f1.write(dot.source)
