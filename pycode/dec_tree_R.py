@@ -39,8 +39,11 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 def makeUnique(dict_):
+    dict__={}
     keys=list(set(dict_.keys()))
-    print keys
+    for key in keys:
+        dict__[key]=dict_[key]
+    return dict__
         
 #./dec_tree_R.py --file /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat --filex /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat  --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.24
 
@@ -184,7 +187,7 @@ while RS is not None:
     PROCESSED=list(set(PROCESSED))
     DIFF = diff(SOURCES,PROCESSED)
     DIFF = diff(DIFF,PROCESSED)
-    makeUnique(edges)
+    edges = makeUnique(edges)
     
     if len(DIFF)>0:
         RS=DIFF
