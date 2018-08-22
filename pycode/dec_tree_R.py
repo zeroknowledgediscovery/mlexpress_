@@ -170,8 +170,6 @@ def processEdgeUpdate(edges_):
     PROCESSED_=list(set([i[1] for  i in edges_.keys()]))
     return SOURCES_,PROCESSED_
 
-df=pd.DataFrame()
-
 while RS is not None:
     pool=multiprocessing.Pool(processes=CORES)
     edges__ = pool.map(getTree,RS)
@@ -200,19 +198,17 @@ while RS is not None:
     for key,values in edges.iteritems():
             if key[0] is not "":
                 dot.edge(key[0],key[1])
+    dot.node(RESPONSE[0],shape='circle')
+    dot.node(RESPONSE[0],style='filled')
+    dot.node(RESPONSE[0],fillcolor='red')
+    DOTFILE=EDGEFILE+'.dot'
+    f1=open(DOTFILE,'w+')
+    f1.write(dot.source)
+    f1.close()
             
     df1=pd.DataFrame.from_dict(edges,orient='index')
     df1.columns=['imp']
     df1=df1[df1.imp>0.0]
-    
-    df=df.append(df1)
-    df.to_csv(EDGEFILE,header=None,sep=",")
+    df1.to_csv(EDGEFILE,header=None,sep=",")
 
 print(edges)
-dot.node(RESPONSE[0],shape='circle')
-dot.node(RESPONSE[0],style='filled')
-dot.node(RESPONSE[0],fillcolor='red')
-DOTFILE=EDGEFILE+'.dot'
-f1=open(DOTFILE,'w+')
-f1.write(dot.source)
-f1.close()
