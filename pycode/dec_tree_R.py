@@ -19,6 +19,9 @@ import operator
 
 import multiprocessing
 
+from graphviz import Digraph
+dot = Digraph()
+
 warnings.filterwarnings("ignore")
 
 DEBUG=True
@@ -189,6 +192,9 @@ while RS is not None:
     if DEBUG:
         print "CURRENT RS--> ", RS, PROCESSED, SOURCES
 
+    for key,values in edges.iteritems():
+            dot.edge(key[0],key[1])
+            
     df1=pd.DataFrame.from_dict(edges,orient='index')
     df1.columns=['imp']
     df1=df1[df1.imp>0.0]
@@ -196,4 +202,4 @@ while RS is not None:
     df=df.append(df1)
     df.to_csv(EDGEFILE,header=None,sep=",")
 
-     
+print(dot.source)  
