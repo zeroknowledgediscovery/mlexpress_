@@ -87,6 +87,10 @@ parser.add_argument('--importance_threshold', dest='FEATURE_IMP_THRESHOLD',
                     action="store", type=float,
                     default=0.2,
                     help="Feature importance threshold: default 0.2")
+parser.add_argument('--edgefile', dest='EDGEFILE',
+                    action="store", type=str,
+                    default="edges.txt",
+                    help="edges filename")
 
 results=parser.parse_args()
 RESPONSE=results.RESPONSE
@@ -106,6 +110,7 @@ BALANCE=results.BALANCE
 SAMPLECOL=results.SAMPLECOL
 ZERODEL=results.ZERODEL
 FEATURE_IMP_THRESHOLD=results.FEATURE_IMP_THRESHOLD
+EDGEFILE=results.EDGEFILE
 
 RS = RESPONSE
 if INCLUDE != "":
@@ -116,8 +121,6 @@ edges={}
 SOURCES=[]
 PROCESSED=[]
 DIFF=[]
-
-
 
 def getTree(RS_=[]):
     RS_=[RS_]
@@ -157,8 +160,9 @@ def processEdgeUpdate(edges_):
     PROCESSED_=list(set([i[1] for  i in edges_.keys()]))
     return SOURCES_,PROCESSED_
 
+df=pd.DataFrame()
+
 while RS is not None:
-    #edges_ = getTree(RS[0])
     pool=multiprocessing.Pool(processes=CORES)
     edges__ = pool.map(getTree,RS)
     pool.close()
@@ -185,8 +189,8 @@ while RS is not None:
     if DEBUG:
         print "CURRENT RS--> ", RS, PROCESSED, SOURCES
     
-df = pd.DataFrame.from_dict(edges,orient='index')
-df.columns=['imp']
-df[df.imp>0.0].to_csv('edges.txt',header=None,sep=",")
+    df.append(pd.DataFrame.from_dict(edges,orient='index'))
+    df.columns=['imp']
+    df[df.imp>0.0].to_csv(EDGEFILE,header=None,sep=",")
 
      
