@@ -20,7 +20,6 @@ import operator
 import multiprocessing
 
 from graphviz import Digraph
-dot = Digraph()
 
 warnings.filterwarnings("ignore")
 
@@ -101,6 +100,10 @@ parser.add_argument('--edgefile', dest='EDGEFILE',
                     action="store", type=str,
                     default="edges.txt",
                     help="edges filename")
+parser.add_argument('--dotfile', dest='DOTFILE',
+                    action="store", type=str,
+                    default="edges.dot",
+                    help="dot filename")
 
 results=parser.parse_args()
 RESPONSE=results.RESPONSE
@@ -121,6 +124,7 @@ SAMPLECOL=results.SAMPLECOL
 ZERODEL=results.ZERODEL
 FEATURE_IMP_THRESHOLD=results.FEATURE_IMP_THRESHOLD
 EDGEFILE=results.EDGEFILE
+DOTFILE=results.DOTFILE
 
 RS = RESPONSE
 if INCLUDE != "":
@@ -131,6 +135,26 @@ edges={}
 SOURCES=[]
 PROCESSED=[]
 DIFF=[]
+
+def getDot(edges,RESPONSE,DOTFILE='out.dot',EDGEFILE=None):
+    dot = Digraph()
+    for key,values in edges.iteritems():
+            if key[0] is not "":
+                dot.edge(key[0],key[1])
+    dot.node(RESPONSE[0],shape='circle')
+    dot.node(RESPONSE[0],style='filled')
+    dot.node(RESPONSE[0],fillcolor='red')
+    f1=open(DOTFILE,'w+')
+    f1.write(dot.source)
+    f1.close()
+
+    if EDGEFILE is not None:
+        df1=pd.DataFrame.from_dict(edges,orient='index')
+        df1.columns=['imp']
+        df1=df1[df1.imp>0.0]
+        df1.to_csv(EDGEFILE,header=None,sep=",")
+
+    return
 
 def getTree(RS_=[]):
     RS_=[RS_]
@@ -195,20 +219,7 @@ while RS is not None:
     if DEBUG:
         print "CURRENT RS--> ", RS
 
-    for key,values in edges.iteritems():
-            if key[0] is not "":
-                dot.edge(key[0],key[1])
-    dot.node(RESPONSE[0],shape='circle')
-    dot.node(RESPONSE[0],style='filled')
-    dot.node(RESPONSE[0],fillcolor='red')
-    DOTFILE=EDGEFILE+'.dot'
-    f1=open(DOTFILE,'w+')
-    f1.write(dot.source)
-    f1.close()
+    getDot(edges,RESPONSE,DOTFILE=DOTFILE,EDGEFILE=EDGEFILE)
             
-    df1=pd.DataFrame.from_dict(edges,orient='index')
-    df1.columns=['imp']
-    df1=df1[df1.imp>0.0]
-    df1.to_csv(EDGEFILE,header=None,sep=",")
 
 print(edges)
