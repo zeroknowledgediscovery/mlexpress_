@@ -188,9 +188,10 @@ while RS is not None:
 
     if DEBUG:
         print "CURRENT RS--> ", RS, PROCESSED, SOURCES
-    
-    df=df.append(pd.DataFrame.from_dict(edges,orient='index'))
-    df.columns=['imp']
+
+    df1=pd.DataFrame.from_dict(edges,orient='index')
+    df1.columns=['imp']
+    df=df.append(df1)
     df[df.imp>0.0].to_csv(EDGEFILE,header=None,sep=",")
 
      
