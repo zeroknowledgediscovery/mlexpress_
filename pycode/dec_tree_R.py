@@ -76,7 +76,8 @@ parser.add_argument('--inconly', dest='INCLUDEONLY',
                     action="store", type=str,nargs='+',
                     default='',help="Included features, only")
 parser.add_argument('--inc', dest='INCLUDE',
-                    action="store", type=str,nargs='+', default='',help="Included features")
+                    action="store", type=str,nargs='+', default='',
+                    help="Included features")
 parser.add_argument("--verbose", type=str2bool, nargs='?',dest='VERBOSE',
                     const=True, default=False,
                     help="Verbose")
@@ -193,7 +194,8 @@ while RS is not None:
         print "CURRENT RS--> ", RS, PROCESSED, SOURCES
 
     for key,values in edges.iteritems():
-            dot.edge(key[0],key[1])
+            if key[0] is not "":
+                dot.edge(key[0],key[1])
             
     df1=pd.DataFrame.from_dict(edges,orient='index')
     df1.columns=['imp']
@@ -202,4 +204,8 @@ while RS is not None:
     df=df.append(df1)
     df.to_csv(EDGEFILE,header=None,sep=",")
 
-print(dot.source)  
+print(dot.source)
+DOTFILE=EDGEFILE+'.dot'
+f1=open(DOTFILE, 'w+')
+f1.write(dot.source)
+f1.close()
