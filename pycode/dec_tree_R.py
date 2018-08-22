@@ -38,7 +38,10 @@ def str2bool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
-
+def makeUnique(dict_):
+    keys=list(set(dict_.keys()))
+    print keys
+        
 #./dec_tree_R.py --file /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat --filex /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat  --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.24
 
 parser = argparse.ArgumentParser(description='Example with non-optional arguments:\
@@ -181,6 +184,7 @@ while RS is not None:
     PROCESSED=list(set(PROCESSED))
     DIFF = diff(SOURCES,PROCESSED)
     DIFF = diff(DIFF,PROCESSED)
+    makeUnique(edges)
     
     if len(DIFF)>0:
         RS=DIFF
@@ -201,7 +205,7 @@ while RS is not None:
     df=df.append(df1)
     df.to_csv(EDGEFILE,header=None,sep=",")
 
-print(dot.source)
+print(edges)
 dot.node(RESPONSE[0],shape='circle')
 dot.node(RESPONSE[0],style='filled')
 dot.node(RESPONSE[0],fillcolor='red')
