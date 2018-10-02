@@ -2,5 +2,10 @@
 
 ---
 
+```
+./qNet.py --file /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat --filex /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat  --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.24
+```
 
-./bin/makesample -f ../level5/expression_level5_phase2_landmark.txt  -o out.txt -M 100 -p -2 -1 1 2 
+```
+./qNet.py --file ../data/Zseq.dat --filex ../data/Zseq.dat  --varimp True --response x100  --importance_threshold 0.24
+```

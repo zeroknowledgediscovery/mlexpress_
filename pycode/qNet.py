@@ -39,7 +39,7 @@ def makeUnique(dict_):
         dict__[key]=dict_[key]
     return dict__
         
-#./dec_tree_R.py --file /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat --filex /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat  --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.24
+#./qNet.py --file /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat --filex /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat  --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.24
 
 parser = argparse.ArgumentParser(description='Example with non-optional arguments:\
 ./dec_tree_2.py --file data.dat --filex data.dat --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.5')
