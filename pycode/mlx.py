@@ -587,7 +587,11 @@ def visTree(MODEL,PR,PLOT=True,VERBOSE=False,
 #------------------------------------------
 
 def nameclean(str_):
-    return str_.replace('-','x').replace('+','p').replace('*','s')
+    str_.replace('-','x').replace('+','p').replace('*','s').replace('.','d')
+    if unicode(str_).isdigit():
+        str_='P'+str_
+        
+    return str_
 
 def setdataframe(file1,outname="",
                  delete_=[],include_=[],
