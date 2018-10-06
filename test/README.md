@@ -6,5 +6,5 @@
 ```
 
 ```
-./qNet.py --file ../data/Zseq.dat --filex ../data/Zseq.dat  --varimp True --response x100  --importance_threshold 0.24
+./pycode/qNet.py --file ../data/Zseq_.dat --filex ../data/Zseq_.dat  --varimp True --response 100  --importance_threshold 0.28 --edgefile edgetest.txt --dotfile edgetest.dot
 ```
