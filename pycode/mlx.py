@@ -590,7 +590,7 @@ def nameclean(str_):
     str_.replace('-','x').replace('+','p').replace('*','s').replace('.','d')
     if unicode(str_).isdigit():
         str_='P'+str_
-        
+
     return str_
 
 def setdataframe(file1,outname="",
@@ -601,12 +601,12 @@ def setdataframe(file1,outname="",
                  balance=False,
                  zerodel=[],
                  VERBOSE=False):
-    
+
     MINCLASSNUM=70
     D1=pd.read_csv(file1,delimiter=",",index_col=None,
                    engine='python')
-    D1.columns = map(nameclean,D1.columns.values)   
-    
+   D1.columns = map(nameclean,D1.columns.values)
+
     X_train=D1.values
     datatrain = pd.DataFrame(X_train,columns=D1.columns).dropna('columns')
 
@@ -623,7 +623,7 @@ def setdataframe(file1,outname="",
 
             DDlen=DDlen[DDlen>MINCLASSNUM]
             minlen=DDlen[0]
-            
+
             DD__=[DD[minlen]]
             for i in DDlen[1:]:
                 DD__.append(DD[i].sample(n=minlen))
@@ -643,7 +643,7 @@ def setdataframe(file1,outname="",
             if r not in datatrain_tmp.columns:
                 datatrain_tmp[r]=datatrain[r]
         datatrain=datatrain_tmp
-    
+
     if len(delete_)>0:
         datatrain.drop(delete_,axis=1,inplace=True)
 
