@@ -148,7 +148,7 @@ int main(int argc,char* argv[])
     ("ofile,o",value<string>(), 
      "output file [out.txt]")
     ("pselect,M",value< unsigned int >(), 
-     "select on in M [100]")
+     "select one in M [100]")
     ("partition,p",value< vector<double> >()->multitoken(), "partition");
   positional_options_description p;
   variables_map vm;
