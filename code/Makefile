@@ -11,7 +11,7 @@ DEPS =
 
 INCLUDES = -I$(ZBASE)
 
-OBJ =   makesample  
+OBJ =   makesample  makesample2
 
 all:	$(OBJ)    clear mvbin
 
@@ -32,6 +32,13 @@ makesample.o: makesample.cc
 makesample: makesample.o
 	$(CC)  $(CFLAGS) -o $@ $^  $(LIBS) 
 
+
+
+makesample2.o: makesample2.cc
+	$(CC) $(INCLUDES)  -c -o $@ $< $(CFLAGS)
+
+makesample2: makesample2.o
+	$(CC)  $(CFLAGS) -o $@ $^  $(LIBS) 
 
 
 
