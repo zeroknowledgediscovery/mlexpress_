@@ -605,7 +605,7 @@ def setdataframe(file1,outname="",
     MINCLASSNUM=70
     D1=pd.read_csv(file1,delimiter=",",index_col=None,
                    engine='python')
-   D1.columns = map(nameclean,D1.columns.values)
+    D1.columns = map(nameclean,D1.columns.values)
 
     X_train=D1.values
     datatrain = pd.DataFrame(X_train,columns=D1.columns).dropna('columns')
