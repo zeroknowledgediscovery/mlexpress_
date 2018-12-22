@@ -90,12 +90,6 @@ path = sys.argv[1]
 
 root, folders, files = next(os.walk(path))
 
-dims = {
-    'SPhiv': (12, 12),
-    'LTNPhiv': (50, 50),
-    'Phiv': (200, 200),
-    'RPhiv': (200, 200),
-}
 
 prefixes = [
     'SPhiv',
@@ -139,20 +133,21 @@ for prefix in prefixes:
                             edges.add((x, y))
                             nodes.add(x)
                             nodes.add(y)
-        if prefix in dims:
-            dim = dims[prefix]
-        else:
-            dim = (50, 50)
+
         if len(edges) == 0 or len(nodes) == 0:
             continue
         graph = nx.DiGraph()
         graph.add_nodes_from(nodes)
         graph.add_edges_from(edges)
+
         low_counts = get_sorted_counts(graph, low_tier_map)
-        spec = prefix + '_low_level'
-        fig = plt.figure(figsize=(20, 20))
+        spec = '{}_{}_low_level'.format(prefix, cutoff)
+
+        dim = (10, 10)
+
+        fig = plt.figure(figsize = dim)
         fig.tight_layout()
-        g = nx.Graph()
+        g = nx.DiGraph()
         for x in low_counts:
             u, v = x[0][0], x[0][1]
             g.add_node(u)
@@ -171,18 +166,17 @@ for prefix in prefixes:
         )
         labels = nx.get_edge_attributes(g, 'weight')
         nx.draw_networkx_edge_labels(g, pos, edge_labels = labels)
-        plt.savefig('../weighted_bar_plot/{}_{}{}.png'.format(
-            prefix,
-            cutoff,
-            spec))
+        plt.savefig('../weighted_spring_plot/{}.png'.format(
+            spec,
+        ))
         plt.close()
 
         high_counts = get_sorted_counts(graph, high_tier_map)
-        spec = prefix + '_high_level'
+        spec = '{}_{}_high_level'.format(prefix, cutoff)
 
-        fig = plt.figure(figsize=(20, 20))
+        fig = plt.figure(figsize = dim)
         fig.tight_layout()
-        g = nx.Graph()
+        g = nx.DiGraph()
         for x in high_counts:
             u, v = x[0][0], x[0][1]
             g.add_node(u)
@@ -197,12 +191,10 @@ for prefix in prefixes:
             node_size = 1000,
             node_color = 'white',
             linewidths = 1.0,
-
         )
         labels = nx.get_edge_attributes(g, 'weight')
         nx.draw_networkx_edge_labels(g, pos, edge_labels = labels)
-        plt.savefig('../weighted_bar_plot/{}_{}{}.png'.format(
-            prefix,
-            cutoff,
-            spec))
+        plt.savefig('../weighted_spring_plot/{}.png'.format(
+            spec,
+        ))
         plt.close()
