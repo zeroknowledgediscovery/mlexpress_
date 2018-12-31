@@ -299,6 +299,8 @@ def mutate_sequence(sequence, location, new_value):
         )
     ]
 
+    visited.add(location)
+
     while len(node_queue) > 0:
         node, orig_node, node_type = node_queue.popleft()
         # print("Next node queue item: {}, {}, {}".format(node, orig_node, node_type))
