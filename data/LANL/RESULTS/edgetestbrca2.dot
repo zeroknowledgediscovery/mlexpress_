@@ -1,0 +1,17 @@
+digraph {
+	BAK1 -> AURKA
+	BUB1 -> ASPM
+	ARHGAP11A -> AURKA
+	BUB1 -> AURKA
+	ARNTL2 -> BAK1
+	B3GNT5 -> ARNTL2
+	BUB1 -> ARNTL2
+	BUB1 -> BRCA2
+	ARHGAP11A -> BUB1
+	ASPM -> BUB1
+	BUB1 -> ARHGAP11A
+	AURKA -> ARHGAP11A
+	BRCA2 [shape=circle]
+	BRCA2 [style=filled]
+	BRCA2 [fillcolor=red]
+}

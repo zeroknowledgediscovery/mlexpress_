@@ -1,0 +1,8 @@
+digraph {
+	ANLN -> BUB1
+	BUB1 -> ANLN
+	BUB1 -> BRCA2
+	BRCA2 [shape=circle]
+	BRCA2 [style=filled]
+	BRCA2 [fillcolor=red]
+}
