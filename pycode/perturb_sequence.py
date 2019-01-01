@@ -8,7 +8,7 @@ this one) will also be in Python 2.
 import numpy as np
 import os
 import mlx as ml
-import pickle
+import cPickle as pickle
 import sys
 import re
 import networkx as nx
@@ -16,6 +16,8 @@ from pprint import pprint
 from collections import deque
 from copy import deepcopy
 import random
+import multiprocessing as mp
+import gc
 
 path = sys.argv[1]
 
@@ -276,8 +278,15 @@ def mutate_sequence(sequence, location, new_value):
     """
     new_sequence = list(sequence)
     new_sequence[location] = new_value
+    primary_outcomes = [
+        (
+            {location: new_value},
+            1.0
+        )
+    ]
+
     if location not in TREE_DICT:
-        return new_sequence
+        return primary_outcomes
 
     visited = set()
 
@@ -292,12 +301,7 @@ def mutate_sequence(sequence, location, new_value):
     for x in predecessors:
         node_queue.append((x, location, 'p'))
 
-    primary_outcomes = [
-        (
-            {location: new_value},
-            1.0
-        )
-    ]
+
 
     visited.add(location)
 
@@ -376,9 +380,11 @@ def mutate_sequence(sequence, location, new_value):
                     orig = new_outcome[1]
                     new_outcome[1] *= normalized_pdict[target]
                     new_outcomes.append(tuple(new_outcome))
-
             primary_outcomes = new_outcomes
 
+        gc.collect()
+        if len(primary_outcomes) > 100000:
+            return primary_outcomes
         successors, predecessors = get_successors_and_predecessors(node)
 
         for predecessor in predecessors:
@@ -397,29 +403,43 @@ def mutate_sequence(sequence, location, new_value):
                 ))
     return primary_outcomes
 
+def split_list(orig_list, chunk_size):
+    for i in range(0, len(orig_list), chunk_size):
+        yield orig_list[i:i+chunk_size]
+
+def map_mutate_sequence(tup):
+    sequence, selected_location, update_val = tup
+    x = mutate_sequence(sequence, selected_location, update_val)
+    return x
+
 def perturb_sequence(sequence, location, replacement_val):
     new_sequence = list(sequence)
     primary_outcomes = mutate_sequence(sequence, location, replacement_val)
 
     secondary_outcomes_list = []
 
+    tups = []
+
+    num_cores = mp.cpu_count()
+
     # TODO: choose based on the 'most likely' nucleotide instead of randomly
-    # TODO: parallelize the below for loop using multiprocessing
-    # it can be slow on examples like RPhiv, where there are a lot of components
-    count = 0
-    print("{} graph components".format(len(GRAPH_COMPONENTS)))
     for component in GRAPH_COMPONENTS:
-        print("iter {}".format(count))
-        print(len(component))
-        print(component)
-        count += 1
         if location not in component:
             selected_location = random.choice(list(component))
-            secondary_outcomes_list.append(mutate_sequence(
-                sequence,
-                selected_location,
-                sequence[selected_location],
-            ))
+            tups.append(
+                (
+                    sequence,
+                    selected_location,
+                    sequence[selected_location]
+                )
+            )
+    print("Resolving {} components".format(len(tups)))
+    chunks = [x for x in split_list(tups, num_cores * 5)]
+    initial_results = []
+    pool = mp.Pool(num_cores)
+    secondary_outcomes_list = pool.map(map_mutate_sequence, tups)
+    pool.close()
+    pool.join()
 
     return primary_outcomes, secondary_outcomes_list
 
