@@ -105,7 +105,7 @@ print("Loaded sample RPhiv sequence")
 print("{} nucleotides long".format(len(sequence)))
 
 start = ('RPhiv', 5)
-end = ('SPhiv', 5)
+end = ('RPhiv', 5)
 
 TREE_DICT = MASTER_TREE_DICT[end]
 GRAPH = GRAPH_DICT[end]
@@ -145,7 +145,7 @@ def get_prob_from_dict(prob_dict, class_name):
 
 def normalize_probability_dict(prob_dict):
     prob_dict = deepcopy(prob_dict)
-    total = sum(prob_dict.values())
+    total = float(sum(prob_dict.values()))
     for x in prob_dict:
         prob_dict[x] /= total
     return prob_dict
@@ -309,11 +309,20 @@ def mutate_sequence(sequence, location, new_value):
         visited.add(node)
         if node not in TREE_DICT:
             continue
+        # print("Outcome length: {}".format(len(primary_outcomes)))
+        # for i, x in enumerate(primary_outcomes):
+        #     for j, y in enumerate(primary_outcomes):
+        #         if i != j:
+        #             if x[0] == y[0]:
+        #                 print("MATCH")
+        #                 print(x)
+        #                 print(y)
 
-        new_outcomes = []
         if node_type == 'p':
             # if this is a predecessor tree, then node predicts orig_node
             # we expect node to be in the tree for orig_node
+            # TODO: add option to iterate over all leaf nodes, instead of
+            # most likely one
             current_tree = TREE_DICT[orig_node]
             target_leaf = get_best_node(current_tree, sequence[orig_node])
             path = leaf_to_root_path(current_tree, target_leaf)
@@ -326,6 +335,8 @@ def mutate_sequence(sequence, location, new_value):
                 # print(current_tree.feature[path[i-1]])
                 current_tree_node = int(current_tree.feature[path[i-1]][1:])
                 prob_update = 1.0/len(options)
+                # print("PROBABILITY UPDATE: {}".format(prob_update))
+                new_outcomes = []
                 for outcome in primary_outcomes:
                     # make a copy
                     for nucleotide in options:
@@ -340,6 +351,7 @@ def mutate_sequence(sequence, location, new_value):
             # predicts node
             # we need to evaluate the node using current positions
             # and then decide
+            new_outcomes = []
             current_tree = TREE_DICT[node]
             current_tree_node = 1
             target_pos = tree_str_to_index(current_tree.response_var_)
@@ -356,10 +368,12 @@ def mutate_sequence(sequence, location, new_value):
                         target,
                 )
                 normalized_pdict = normalize_probability_dict(current_tree.class_pred_[current_tree_node])
-
                 for target in normalized_pdict:
+                    if normalized_pdict[target] == 0:
+                        continue
                     new_outcome = list(deepcopy(outcome))
                     new_outcome[0][target_pos] = target
+                    orig = new_outcome[1]
                     new_outcome[1] *= normalized_pdict[target]
                     new_outcomes.append(tuple(new_outcome))
 
@@ -390,8 +404,15 @@ def perturb_sequence(sequence, location, replacement_val):
     secondary_outcomes_list = []
 
     # TODO: choose based on the 'most likely' nucleotide instead of randomly
-
+    # TODO: parallelize the below for loop using multiprocessing
+    # it can be slow on examples like RPhiv, where there are a lot of components
+    count = 0
+    print("{} graph components".format(len(GRAPH_COMPONENTS)))
     for component in GRAPH_COMPONENTS:
+        print("iter {}".format(count))
+        print(len(component))
+        print(component)
+        count += 1
         if location not in component:
             selected_location = random.choice(list(component))
             secondary_outcomes_list.append(mutate_sequence(
@@ -404,5 +425,5 @@ def perturb_sequence(sequence, location, replacement_val):
 
 primary_perturbations, secondary_perturbations = perturb_sequence(sequence, 9, 'A')
 
-with open('../perturbation_example/SPhiv_5_perturbation_9A.pkl', 'w') as fh:
+with open('../perturbation_example/RPhiv_5_perturbation_9A.pkl', 'w') as fh:
     pickle.dump((primary_perturbations, secondary_perturbations), fh)
