@@ -11,6 +11,7 @@ path = sys.argv[1]
 root, folders, files = next(os.walk(path))
 
 low_tier_map = {
+    "5' LTR": [(1, 634)],
     'p17': [(1790, 1186)],
     'p24': [(1186, 1879)],
     'p2': [(1879, 1921)],
@@ -32,6 +33,7 @@ low_tier_map = {
 }
 
 high_tier_map = {
+    "5' LTR": [(1, 634)],
     'gag': [(790, 2292)],
     'pol': [(2085, 5096)],
     'vif': [(5041, 5619)],
