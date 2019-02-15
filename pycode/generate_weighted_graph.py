@@ -72,20 +72,6 @@ def get_sorted_counts(graph, label_map):
 def strfmt(tup):
     return '{} -> {}'.format(tup[0], tup[1])
 
-def pred_bar_plot(count_list, prefix, cutoff):
-    fig = plt.figure(figsize=(16, 10))
-    plt.style.use('seaborn')
-    fig.tight_layout()
-    labels = list(reversed([strfmt(x[0]) for x in count_list]))
-    ys = pd.Series(list(reversed([x[1] for x in count_list])))
-    ax = ys.plot(kind='barh')
-    ax.set_xlabel('Frequency')
-    ax.set_ylabel('Location predictions')
-    ax.set_title('{}, cutoff {}'.format(prefix, cutoff))
-    ax.set_yticklabels(labels)
-    plt.savefig('../weighted_bar_plot/{}_{}.png'.format(prefix, cutoff))
-    plt.close()
-
 path = sys.argv[1]
 
 root, folders, files = next(os.walk(path))
@@ -159,10 +145,10 @@ for prefix in prefixes:
             g,
             pos=pos,
             with_labels = True,
-            node_size = 1000,
+            node_size = 300,
             node_color = 'white',
             linewidths = 1.0,
-
+            font_size=20,
         )
         labels = nx.get_edge_attributes(g, 'weight')
         nx.draw_networkx_edge_labels(g, pos, edge_labels = labels)
@@ -191,6 +177,7 @@ for prefix in prefixes:
             node_size = 1000,
             node_color = 'white',
             linewidths = 1.0,
+            font_size=20,
         )
         labels = nx.get_edge_attributes(g, 'weight')
         nx.draw_networkx_edge_labels(g, pos, edge_labels = labels)

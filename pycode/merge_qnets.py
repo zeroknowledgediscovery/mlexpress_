@@ -6,9 +6,11 @@ path = sys.argv[1]
 
 root, folders, files = next(os.walk(path))
 
+OUTPUT_DIR = 'QNETNEW_COMPILED'
+
 prefixes = [
     'SPhiv',
-    # 'RPhiv',
+    'RPhiv',
     'LTNPhiv',
     'ELITEhiv',
     'Phiv',
@@ -27,6 +29,7 @@ template = """digraph {{
 cutoffs = set()
 
 for fname in files:
+    print(fname)
     match = re.match(fpattern, fname)
     if match:
         cutoffs.add(int(match.group(2)))
@@ -47,25 +50,5 @@ for prefix in prefixes:
         edges = ['{} -> {}'.format(x[0], x[1]) for x in edges]
         if len(edges) == 0:
             continue
-        with open('../QNET_COMPILED/{}_{}.dot'.format(prefix, cutoff), 'w') as fh:
+        with open('../{}/{}_{}.dot'.format(OUTPUT_DIR, prefix, cutoff), 'w') as fh:
             fh.write(template.format(',\n'.join(edges)))
-
-cutoff = 75
-sub_cutoffs = [0.9, 0.925, 0.95, 0.975, 0.98, 0.99, 0.995]
-for sub_cutoff in sub_cutoffs:
-    edges = set()
-    for fname in files:
-        match = re.match(datfpattern, fname)
-        if match:
-            if match.group(1) == 'RPhiv' and match.group(2) == str(cutoff):
-                with open(os.path.join(root, fname), 'r') as fh:
-                    text = fh.read()
-                    for match in re.finditer(datpattern, text):
-                        if float(match.group(3)) >= sub_cutoff:
-                            edges.add((match.group(1), match.group(2)))
-    edges = list(edges)
-    edges = ['{} -> {}'.format(x[0], x[1]) for x in edges]
-    if len(edges) == 0:
-        continue
-    with open('../QNET_COMPILED/RPhiv_{}.dot'.format(sub_cutoff), 'w') as fh:
-        fh.write(template.format(',\n'.join(edges)))

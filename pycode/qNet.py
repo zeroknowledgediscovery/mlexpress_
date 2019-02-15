@@ -5,17 +5,17 @@ import pandas as pd
 import subprocess
 import os
 import sys
-import mlx as ml 
+import mlx as ml
 import matplotlib.pyplot as plt
-import pandas as pd
 import seaborn as sns
-import scipy.stats as stat 
+import scipy.stats as stat
 import argparse
 import warnings
 import tempfile
 import operator
-import multiprocessing
+import multiprocessing as mp
 from graphviz import Digraph
+import pickle
 
 warnings.filterwarnings("ignore")
 DEBUG=True
@@ -23,7 +23,7 @@ DEBUG=True
 def diff(first, second):
         second = set(second)
         return [item for item in first if item not in second]
-    
+
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
         return True
@@ -38,7 +38,7 @@ def makeUnique(dict_):
     for key in keys:
         dict__[key]=dict_[key]
     return dict__
-        
+
 #./qNet.py --file /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat --filex /home/ishanu/ZED/Research/mlexpress_/data/qdat11.dat  --varimp True --response DDR1 --zerodel B --del CELL --importance_threshold 0.24
 
 parser = argparse.ArgumentParser(description='Example with non-optional arguments:\
@@ -55,7 +55,7 @@ parser.add_argument('--ntree', dest='NUMTREE',
                     default=300,help="Number of trees in rndom forest")
 parser.add_argument('--cores', dest='CORES',
                     action="store", type=int,
-                    default=10,help="Number of cores to use in rndom forest")
+                    default=mp.cpu_count(),help="Number of cores to use in rndom forest")
 parser.add_argument('--sample', dest='SAMPLES',
                     action="store", type=int,default=10,help="sample size for columns")
 parser.add_argument("--plot", type=str2bool, nargs='?',dest='PLOT_',
@@ -99,6 +99,10 @@ parser.add_argument('--dotfile', dest='DOTFILE',
                     action="store", type=str,
                     default="edges.dot",
                     help="dot filename")
+parser.add_argument('--randomforest', dest='USE_RANDOMFOREST', type=bool,
+                    default = False)
+parser.add_argument('--tree_prefix', dest='TREE_PREFIX', action='store',
+                    type=str, default = '')
 
 results=parser.parse_args()
 RESPONSE=results.RESPONSE
@@ -122,9 +126,17 @@ EDGEFILE=results.EDGEFILE
 DOTFILE=results.DOTFILE
 RESPONSE = map(ml.nameclean,RESPONSE)
 RS = RESPONSE
+TREE_PREFIX = results.TREE_PREFIX
+
+if TREE_PREFIX is not '':
+    TREE_PREFIX = TREE_PREFIX + '_'
+
 if INCLUDE != "":
     INCLUDE = list(set(list(set(INCLUDE)).extend(RS)))
-    
+
+# if os.path.exists(DOTFILE) and os.path.exists(EDGEFILE):
+#     sys.exit()
+
 INPUTFILE_ = ""
 edges={}
 SOURCES=[]
@@ -136,9 +148,9 @@ def getDot(edges,RESPONSE,DOTFILE='out.dot',EDGEFILE=None):
     for key,values in edges.iteritems():
             if key[0] is not "":
                 dot.edge(key[0],key[1])
-    dot.node(RESPONSE[0],shape='circle')
-    dot.node(RESPONSE[0],style='filled')
-    dot.node(RESPONSE[0],fillcolor='red')
+    # dot.node(RESPONSE[0],shape='circle')
+    # dot.node(RESPONSE[0],style='filled')
+    # dot.node(RESPONSE[0],fillcolor='red')
     f1=open(DOTFILE,'w+')
     f1.write(dot.source)
     f1.close()
@@ -151,7 +163,7 @@ def getDot(edges,RESPONSE,DOTFILE='out.dot',EDGEFILE=None):
 
     return
 
-def getTree(RS_=[]):
+def getTree(RS_=[], prefix = []):
     RS_=[RS_]
     edges_={}
     datatrain = ml.setdataframe(FILE,outname=INPUTFILE_,
@@ -172,8 +184,16 @@ def getTree(RS_=[]):
                                              datatest__=datatest,
                                              VERBOSE=VERBOSE,
                                              TREE_EXPORT=False)
-    
+
     if TR is not None:
+        output = '{}{}.dot'.format(TREE_PREFIX, TR.response_var_)
+        pkl = '{}{}.pkl'.format(TREE_PREFIX, TR.response_var_)
+
+        if not os.path.exists(output):
+            ml.tree_export(TR, outfilename=output)
+        with open(pkl, 'w') as fh:
+            pickle.dump(TR, fh)
+
         sorted_feature_imp\
             = sorted(TR.significant_feature_weight_.items(),
                                     key=operator.itemgetter(1))
@@ -190,25 +210,25 @@ def processEdgeUpdate(edges_):
     return SOURCES_,PROCESSED_
 
 while RS is not None:
-    pool=multiprocessing.Pool(processes=CORES)
+    pool = mp.Pool(CORES)
     edges__ = pool.map(getTree,RS)
     pool.close()
     pool.join()
 
     if DEBUG:
         print edges__
-        
+
     for edges_ in edges__:
         SOURCES_,PROCESSED_ = processEdgeUpdate(edges_)
-        edges.update(edges_)    
-        PROCESSED.extend(PROCESSED_)       
+        edges.update(edges_)
+        PROCESSED.extend(PROCESSED_)
         SOURCES.extend(SOURCES_)
     SOURCES=list(set(SOURCES))
     PROCESSED=list(set(PROCESSED))
     DIFF = diff(SOURCES,PROCESSED)
     DIFF = diff(DIFF,PROCESSED)
     edges = makeUnique(edges)
-    
+
     if len(DIFF)>0:
         RS=DIFF
     else:
@@ -219,6 +239,6 @@ while RS is not None:
 
     getDot(edges,RESPONSE,
            DOTFILE=DOTFILE,EDGEFILE=EDGEFILE)
-            
+
 
 print(edges)

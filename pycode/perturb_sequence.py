@@ -18,14 +18,46 @@ from copy import deepcopy
 import random
 import multiprocessing as mp
 import gc
+import argparse
 
-path = sys.argv[1]
+parser = argparse.ArgumentParser(description="""Arguments for generating a pickle
+of probability dictionaries""")
+parser.add_argument('--tree_path', dest = 'TREE_PATH', action = 'store',
+type=str, help="Path to folder with graph trees")
+parser.add_argument('--cutoffs', dest='CUTOFFS', nargs = '+', type=int)
+parser.add_argument('--input_sequence', dest='INPUT_SEQUENCE', type=str,
+help="Path to file containing a single sequence to be mutated")
+parser.add_argument('--target_location', dest='TARGET_LOCATION', type=int,
+help="Index of location we wish to mutate")
+parser.add_argument('--target_amino_acid', dest='TARGET_AA', type=int,
+help="Amino acid we wish to change at this point")
+parser.add_argument('--end_subtype', dest='END_SUBTYPE', type=str,
+help="Subtype to change sequence into")
+parser.add_argument('--end_cutoff', dest='END_CUTOFF', type=str,
+help="Subtype confidence interval to verify")
+parser.add_argument('--primary_only', dest='PRIMARY_ONLY', action='store_true',
+default = False, help="""Will only store perturbation results for selected component""")
+parser.add_argument('--max_confidence', dest='USE_MAX_CONFIDENCE',
+action='store_true', default=False, help="""Generated a limited subset of the
+output space by choosing most likely trees""")
+parser.add_argument('--output_file', dest='OUTPUT_FILE', action='store',
+type=str, help="Pickle of resulting probability dictionaries being stored")
 
-TREE_PATH = '../trees/'
 
-root, folders, files = next(os.walk(path))
+results = parser.parse_args()
 
-prefixes = [
+TREE_PATH = results.TREE_PATH
+CUTOFFS = results.CUTOFFS
+INPUT_SEQUENCE = results.INPUT_SEQUENCE
+END_SUBTYPE = results.END_SUBTYPE
+END_CUTOFF = results.END_CUTOFF
+PRIMARY_ONLY = resutls.PRIMARY_ONLY
+USE_MAX_CONFIDENCE = results.USE_MAX_CONFIDENCE
+TARGET_LOCATION = results.target_location
+TARGET_AA = results.target_amino_acid
+OUTPUT_FILE = results.OUTPUT_FILE
+
+PREFIXES = [
     'SPhiv',
     'Phiv',
     'LTNPhiv',
@@ -37,13 +69,6 @@ fpattern = r'(.*?)_.*?_([0-9]+)\.dot'
 datfpattern = r'(.*?)_.*?_([0-9]+)\.dat'
 datpattern = r'"\(\'(.*?)\', \'(.*?)\'\)",([0-9]+\.[0-9]+)'
 dotpattern = r'P([0-9]+) -> P([0-9]+)'
-
-cutoffs = set()
-
-for fname in files:
-    match = re.match(fpattern, fname)
-    if match:
-        cutoffs.add(int(match.group(2)))
 
 # cutoff, prefix, index
 tstr = '{}_{}_P{}.pkl'
@@ -71,8 +96,8 @@ MASTER_TREE_DICT = {}
 
 GRAPH_DICT = {}
 
-for prefix in prefixes:
-    for cutoff in cutoffs:
+for prefix in PREFIXES:
+    for cutoff in CUTOFFS:
         # print("{} at {}".format(prefix, cutoff))
         trees = load_trees(prefix, cutoff)
         # print("{} trees loaded".format(len(trees)))
@@ -100,14 +125,13 @@ for prefix in prefixes:
 # our goal here is to construct in essence a set of trees of outcomes
 
 # CSV of nucleotide sequences
-with open('../sample_seq.txt', 'r') as fh:
+with open(INPUT_SEQUENCE, 'r') as fh:
     sequence = fh.read().strip().split(',')
 
 print("Loaded sample RPhiv sequence")
 print("{} nucleotides long".format(len(sequence)))
 
-start = ('RPhiv', 5)
-end = ('RPhiv', 5)
+end = (END_SUBTYPE, END_CUTOFF)
 
 TREE_DICT = MASTER_TREE_DICT[end]
 GRAPH = GRAPH_DICT[end]
@@ -325,8 +349,6 @@ def mutate_sequence(sequence, location, new_value):
         if node_type == 'p':
             # if this is a predecessor tree, then node predicts orig_node
             # we expect node to be in the tree for orig_node
-            # TODO: add option to iterate over all leaf nodes, instead of
-            # most likely one
             current_tree = TREE_DICT[orig_node]
             target_leaf = get_best_node(current_tree, sequence[orig_node])
             path = leaf_to_root_path(current_tree, target_leaf)
@@ -422,25 +444,24 @@ def perturb_sequence(sequence, location, replacement_val):
 
     num_cores = mp.cpu_count()
 
-    # TODO: choose based on the 'most likely' nucleotide instead of randomly
-    for component in GRAPH_COMPONENTS:
-        if location not in component:
-            selected_location = random.choice(list(component))
-            tups.append(
-                (
-                    sequence,
-                    selected_location,
-                    sequence[selected_location]
+    if not PRIMARY_ONLY:
+        for component in GRAPH_COMPONENTS:
+            if location not in component:
+                selected_location = random.choice(list(component))
+                tups.append(
+                    (
+                        sequence,
+                        selected_location,
+                        sequence[selected_location]
+                    )
                 )
-            )
-    print("Resolving {} components".format(len(tups)))
-    chunks = [x for x in split_list(tups, num_cores * 5)]
-    initial_results = []
-    pool = mp.Pool(num_cores)
-    secondary_outcomes_list = pool.map(map_mutate_sequence, tups)
-    pool.close()
-    pool.join()
-
+        print("Resolving {} components".format(len(tups)))
+        chunks = [x for x in split_list(tups, num_cores * 5)]
+        initial_results = []
+        pool = mp.Pool(num_cores)
+        secondary_outcomes_list = pool.map(map_mutate_sequence, tups)
+        pool.close()
+        pool.join()
     return primary_outcomes, secondary_outcomes_list
 
 primary_perturbations, secondary_perturbations = perturb_sequence(sequence, 9, 'A')

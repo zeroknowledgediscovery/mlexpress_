@@ -11,7 +11,7 @@ path = sys.argv[1]
 root, folders, files = next(os.walk(path))
 
 prefixes = [
-    # 'SPhiv',
+    'SPhiv',
     # 'Phiv',
     # 'LTNPhiv',
     # 'ELITEhiv',
@@ -86,5 +86,3 @@ for prefix in prefixes:
         )
         plt.close()
         print(prefix, cutoff)
-
-cutoff = 75
