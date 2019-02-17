@@ -175,7 +175,7 @@ def getTree(RS_=[], prefix = []):
                                 balance=BALANCE,
                                 zerodel=ZERODEL)
     datatest = ml.setdataframe(FILEx,
-                               include_=datatrain.columns,
+                               include_=INCLUDEONLY,
                                response_var=RS_,
                                zerodel=ZERODEL)
 
@@ -209,11 +209,10 @@ def processEdgeUpdate(edges_):
     PROCESSED_=list(set([i[1] for  i in edges_.keys()]))
     return SOURCES_,PROCESSED_
 
+pool = mp.Pool(CORES)
 while RS is not None:
-    pool = mp.Pool(CORES)
+
     edges__ = pool.map(getTree,RS)
-    pool.close()
-    pool.join()
 
     if DEBUG:
         print edges__
@@ -239,6 +238,9 @@ while RS is not None:
 
     getDot(edges,RESPONSE,
            DOTFILE=DOTFILE,EDGEFILE=EDGEFILE)
+
+pool.close()
+pool.join()
 
 
 print(edges)
