@@ -103,6 +103,7 @@ parser.add_argument('--randomforest', dest='USE_RANDOMFOREST', type=bool,
                     default = False)
 parser.add_argument('--tree_prefix', dest='TREE_PREFIX', action='store',
                     type=str, default = '')
+parser.add_argument('--output_dir', dest='OUTPUT_DIR', default='.')
 
 results=parser.parse_args()
 RESPONSE=results.RESPONSE
@@ -127,6 +128,7 @@ DOTFILE=results.DOTFILE
 RESPONSE = map(ml.nameclean,RESPONSE)
 RS = RESPONSE
 TREE_PREFIX = results.TREE_PREFIX
+OUTPUT_DIR = results.OUTPUT_DIR
 
 if TREE_PREFIX is not '':
     TREE_PREFIX = TREE_PREFIX + '_'
@@ -186,8 +188,8 @@ def getTree(RS_=[], prefix = []):
                                              TREE_EXPORT=False)
 
     if TR is not None:
-        output = '{}{}.dot'.format(TREE_PREFIX, TR.response_var_)
-        pkl = '{}{}.pkl'.format(TREE_PREFIX, TR.response_var_)
+        output = os.path.join(OUTPUT_DIR, '{}{}.dot'.format(TREE_PREFIX, TR.response_var_))
+        pkl = os.path.join(OUTPUT_DIR, '{}{}.pkl'.format(TREE_PREFIX, TR.response_var_))
 
         if not os.path.exists(output):
             ml.tree_export(TR, outfilename=output)

@@ -951,7 +951,8 @@ def tree_export(TR,outfilename='out.dot',
     out_file.write("}")
 
     if EXEC:
-        outfilename_="TREE_"+outfilename.replace('.dot','.png')
+        path, basename = os.path.split(outfilename)
+        outfilename_ = os.path.join(path, 'TREE_' + basename.replace('.dot', '.png'))
         subprocess.Popen(["dot", '-Tpng', outfilename, '-o', outfilename_])
     return
 
