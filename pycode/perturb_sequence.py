@@ -22,18 +22,18 @@ import argparse
 
 parser = argparse.ArgumentParser(description="""Arguments for generating a pickle
 of probability dictionaries""")
-parser.add_argument('--tree_path', dest = 'TREE_PATH', action = 'store',
-type=str, help="Path to folder with graph trees")
+parser.add_argument('tree_path', type=str, help="Path to folder with graph trees")
 parser.add_argument('--cutoffs', dest='CUTOFFS', nargs = '+', type=int)
+parser.add_argument('--prefixes', dest='PREFIXES', nargs='+', type=str)
 parser.add_argument('--input_sequence', dest='INPUT_SEQUENCE', type=str,
 help="Path to file containing a single sequence to be mutated")
 parser.add_argument('--target_location', dest='TARGET_LOCATION', type=int,
 help="Index of location we wish to mutate")
-parser.add_argument('--target_amino_acid', dest='TARGET_AA', type=int,
+parser.add_argument('--target_amino_acid', dest='TARGET_AA', type=str,
 help="Amino acid we wish to change at this point")
 parser.add_argument('--end_subtype', dest='END_SUBTYPE', type=str,
 help="Subtype to change sequence into")
-parser.add_argument('--end_cutoff', dest='END_CUTOFF', type=str,
+parser.add_argument('--end_cutoff', dest='END_CUTOFF', type=int,
 help="Subtype confidence interval to verify")
 parser.add_argument('--primary_only', dest='PRIMARY_ONLY', action='store_true',
 default = False, help="""Will only store perturbation results for selected component""")
@@ -46,24 +46,18 @@ type=str, help="Pickle of resulting probability dictionaries being stored")
 
 results = parser.parse_args()
 
-TREE_PATH = results.TREE_PATH
+TREE_PATH = results.tree_path
 CUTOFFS = results.CUTOFFS
 INPUT_SEQUENCE = results.INPUT_SEQUENCE
 END_SUBTYPE = results.END_SUBTYPE
 END_CUTOFF = results.END_CUTOFF
-PRIMARY_ONLY = resutls.PRIMARY_ONLY
+PRIMARY_ONLY = results.PRIMARY_ONLY
 USE_MAX_CONFIDENCE = results.USE_MAX_CONFIDENCE
-TARGET_LOCATION = results.target_location
-TARGET_AA = results.target_amino_acid
+TARGET_LOCATION = results.TARGET_LOCATION
+TARGET_AA = results.TARGET_AA
 OUTPUT_FILE = results.OUTPUT_FILE
 
-PREFIXES = [
-    'SPhiv',
-    'Phiv',
-    'LTNPhiv',
-    'ELITEhiv',
-    'RPhiv',
-]
+PREFIXES = results.PREFIXES
 
 fpattern = r'(.*?)_.*?_([0-9]+)\.dot'
 datfpattern = r'(.*?)_.*?_([0-9]+)\.dat'
@@ -73,10 +67,16 @@ dotpattern = r'P([0-9]+) -> P([0-9]+)'
 # cutoff, prefix, index
 tstr = '{}_{}_P{}.pkl'
 
+# CSV of nucleotide sequences
+with open(INPUT_SEQUENCE, 'r') as fh:
+    sequence = fh.read().strip().split(',')
+
+root, fname, files = next(os.walk(TREE_PATH))
+
 def load_trees(prefix, cutoff):
     trees = {}
     index = 0
-    for index in range(8500):
+    for index in range(len(sequence)):
         fname = os.path.join(TREE_PATH, tstr.format(
             cutoff, prefix, index
         ))
@@ -124,14 +124,14 @@ for prefix in PREFIXES:
 
 # our goal here is to construct in essence a set of trees of outcomes
 
-# CSV of nucleotide sequences
-with open(INPUT_SEQUENCE, 'r') as fh:
-    sequence = fh.read().strip().split(',')
-
 print("Loaded sample RPhiv sequence")
 print("{} nucleotides long".format(len(sequence)))
 
 end = (END_SUBTYPE, END_CUTOFF)
+# print(end)
+# print("SEEN VALUES:")
+# for item in MASTER_TREE_DICT:
+#     print(item)
 
 TREE_DICT = MASTER_TREE_DICT[end]
 GRAPH = GRAPH_DICT[end]
@@ -145,9 +145,11 @@ GRAPH_COMPONENTS = []
 for component in nx.connected_components(ud):
     GRAPH_COMPONENTS.append(component)
 
-# print("{} components".format(len(GRAPH_COMPONENTS)))
-#
+
+print("{} components".format(len(GRAPH_COMPONENTS)))
+
 # pprint(GRAPH_COMPONENTS)
+# print(GRAPH.successors(335))
 
 # print(sequence[112])
 # print(GRAPH.successors(112))
@@ -193,10 +195,8 @@ def get_successors_and_predecessors(location):
     by setting the node that predicts the other with more accuracy to be the
     parent.
     """
-    if location not in GRAPH:
-        return None
-    successors = GRAPH.successors(location)
-    predecessors = GRAPH.predecessors(location)
+    successors = list(GRAPH.successors(location))
+    predecessors = list(GRAPH.predecessors(location))
 
     conflicts = [x for x in successors if x in predecessors]
 
@@ -459,12 +459,12 @@ def perturb_sequence(sequence, location, replacement_val):
         chunks = [x for x in split_list(tups, num_cores * 5)]
         initial_results = []
         pool = mp.Pool(num_cores)
-        secondary_outcomes_list = pool.map(map_mutate_sequence, tups)
+        secondary_outcomes_list = list(map(map_mutate_sequence, tups))
         pool.close()
         pool.join()
     return primary_outcomes, secondary_outcomes_list
 
-primary_perturbations, secondary_perturbations = perturb_sequence(sequence, 9, 'A')
+primary_perturbations, secondary_perturbations = perturb_sequence(sequence, TARGET_LOCATION, TARGET_AA)
 
-with open('../perturbation_example/RPhiv_5_perturbation_9A.pkl', 'w') as fh:
+with open(OUTPUT_FILE, 'w') as fh:
     pickle.dump((primary_perturbations, secondary_perturbations), fh)

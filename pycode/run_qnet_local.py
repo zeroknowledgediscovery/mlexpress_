@@ -1,24 +1,26 @@
 import subprocess
 import multiprocessing as mp
 import os
+import argparse
 
-prefixes = [
-    'cchfl',
-]
+parser = argparse.ArgumentParser()
+parser.add_argument('data_path', help='Path to folder containing train and test files (named prefix_train.csv and prefix_test.csv)')
+parser.add_argument('output_directory', help='Path for where to store output files (.dot, .pkl, .dat)')
+parser.add_argument('--prefixes', nargs='+', help='Subtype prefixes (e.g. SPhiv, Phiv, cchfl)', default=['cchfl'])
+parser.add_argument('--cutoffs', nargs='+', type=float, help='Confidence thresholds (0-100)', default=[75])
+parser.add_argument('--num_features', nargs='+', type=int, help='Number of features per sequence specified in prefixes')
+results = parser.parse_args()
 
-cutoffs = [
-    0.75,
-]
+results.cutoffs = [x/100 for x in results.cutoffs]
 
-num_features = [
-    400,
-]
+data_path = os.path.abspath(results.data_path)
+output_directory = os.path.abspath(results.output_directory)
+prefixes = results.prefixes
+cutoffs = results.cutoffs
+num_features = results.num_features
 
-data_path = '../'
-output_directory = '../test_output'
-
-output_directory = os.path.abspath(output_directory)
-data_path = os.path.abspath(data_path)
+assert(len(prefixes) == len(cutoffs) == len(num_features)), \
+"When specifying prefixes, cutoffs, or features, you must specify all three with their corresponding values"
 
 if not os.path.isdir(output_directory):
     os.makedirs(output_directory)

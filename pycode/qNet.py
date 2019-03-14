@@ -192,7 +192,7 @@ def getTree(RS_=[], prefix = []):
         pkl = os.path.join(OUTPUT_DIR, '{}{}.pkl'.format(TREE_PREFIX, TR.response_var_))
 
         if not os.path.exists(output):
-            ml.tree_export(TR, outfilename=output)
+            ml.tree_export(TR, outfilename=output, EXEC=False)
         with open(pkl, 'w') as fh:
             pickle.dump(TR, fh)
 

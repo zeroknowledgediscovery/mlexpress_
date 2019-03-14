@@ -76,3 +76,12 @@ optional arguments:
 ```
 ./pycode/qNet.py --file ./data/Zseq_.dat --filex ./data/Zseq_.dat  --varimp True --response 100  --importance_threshold 0.28 --edgefile edgetest.txt --dotfile edgetest.dot
 ```
+
+# Example Pipeline Code Run
+
+Example scripts are provided in `demo1.sh` and `demo2.sh`
+
+Run `demo1.sh` first, to create output in `test_output.sh`, including a PNG of the resulting cchfl network.
+Run `demo2.sh`, secondly, to generate the QNETs. Note that if you encounter an error, you may need to inspect the resulting `cchfl_75.png` in `test_output` and verify that the position is in the QNET.
+
+Note that both of these should be run while `pycode` is the current working directory.
