@@ -1,0 +1,44 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [ranksep=equally, splines=polylines, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica] ;
+LEGEND [label="Response : P144
+Classes: A|C|G|T
+In ACC: 0.89
+Out ACC: 0.64
+",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="P321
+
+pval: 5.55E-16", fillcolor="#b98668"] ;
+2 [label="G
+Prob: 0.15
+Err: 18.18%", fillcolor="#5791d5"] ;
+3 [label="P154
+
+pval: 0.00E+00", fillcolor="#cb8355"] ;
+4 [label="P292
+
+pval: 2.33E-15", fillcolor="#dc7857"] ;
+5 [label="P56
+
+pval: 5.50E-13", fillcolor="#dd843d"] ;
+6 [label="A
+Prob: 0.1
+Err: 28.57%", fillcolor="#b59351"] ;
+7 [label="A
+Prob: 0.49
+Err: 0.0%", fillcolor="#e58139"] ;
+8 [label="T
+Prob: 0.13
+Err: 11.11%", fillcolor="#d841d1"] ;
+9 [label="C
+Prob: 0.14
+Err: 30.0%", fillcolor="#75bf4a"] ;
+1 -> 2 [label="A",fontcolor=deepskyblue2] ;
+1 -> 3 [label="CTG",fontcolor=deepskyblue2] ;
+3 -> 9 [label="G",fontcolor=deepskyblue2] ;
+3 -> 4 [label="ACT",fontcolor=deepskyblue2] ;
+4 -> 8 [label="G",fontcolor=deepskyblue2] ;
+4 -> 5 [label="AC",fontcolor=deepskyblue2] ;
+5 -> 6 [label="ACG",fontcolor=deepskyblue2] ;
+5 -> 7 [label="T",fontcolor=deepskyblue2] ;
+{rank = same; 2;6;7;8;9;}{rank = same; LEGEND;1;}}
