@@ -1,0 +1,68 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [ranksep=equally, splines=polylines, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica] ;
+LEGEND [label="Response : DDR1
+Classes: A|C
+In ACC: 0.89
+Out ACC: 0.89
+",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="FOSL1
+
+pval: 6.65E-14", fillcolor="#5c97c1"] ;
+2 [label="SOX2
+
+pval: 1.27E-05", fillcolor="#479ad6"] ;
+3 [label="BCL2
+
+pval: 4.77E-03", fillcolor="#4d99d0"] ;
+4 [label="PCMT1
+
+pval: 2.61E-03", fillcolor="#5199cd"] ;
+5 [label="C
+Prob: 0.1
+Err: 27.78%", fillcolor="#6895b5"] ;
+6 [label="RBM34
+
+pval: 9.44E-06", fillcolor="#4a9ad3"] ;
+7 [label="C
+Prob: 0.1
+Err: 22.22%", fillcolor="#5f96be"] ;
+8 [label="UBE2C
+
+pval: 3.29E-02", fillcolor="#439bda"] ;
+9 [label="C
+Prob: 0.07
+Err: 25.0%", fillcolor="#6496ba"] ;
+10 [label="C
+Prob: 0.22
+Err: 0.0%", fillcolor="#399de5"] ;
+11 [label="C
+Prob: 0.09
+Err: 0.0%", fillcolor="#399de5"] ;
+12 [label="C
+Prob: 0.24
+Err: 0.0%", fillcolor="#399de5"] ;
+13 [label="DSG2
+
+pval: 3.78E-03", fillcolor="#be875f"] ;
+14 [label="A
+Prob: 0.1
+Err: 38.89%", fillcolor="#a28b7b"] ;
+15 [label="A
+Prob: 0.07
+Err: 0.0%", fillcolor="#e58139"] ;
+1 -> 2 [label="AB",fontcolor=deepskyblue2] ;
+1 -> 13 [label="C",fontcolor=deepskyblue2] ;
+2 -> 3 [label="AB",fontcolor=deepskyblue2] ;
+2 -> 12 [label="C",fontcolor=deepskyblue2] ;
+3 -> 11 [label="C",fontcolor=deepskyblue2] ;
+3 -> 4 [label="AB",fontcolor=deepskyblue2] ;
+4 -> 5 [label="AC",fontcolor=deepskyblue2] ;
+4 -> 6 [label="B",fontcolor=deepskyblue2] ;
+6 -> 8 [label="B",fontcolor=deepskyblue2] ;
+6 -> 7 [label="AC",fontcolor=deepskyblue2] ;
+8 -> 9 [label="AC",fontcolor=deepskyblue2] ;
+8 -> 10 [label="B",fontcolor=deepskyblue2] ;
+13 -> 14 [label="AC",fontcolor=deepskyblue2] ;
+13 -> 15 [label="B",fontcolor=deepskyblue2] ;
+{rank = same; 5;7;9;10;11;12;14;15;}{rank = same; LEGEND;1;}}
