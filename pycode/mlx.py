@@ -1028,3 +1028,143 @@ def randomForestX(RESPONSE__,
 
     return RF,PrRF,ACCRF,CFRF,PrxRF,ACCxRF,CFxRF,RFimp,EFI
 #---------------------------------------------------------------
+
+
+
+def dictprod(dict_,a=1.0):
+    '''
+        given a dict of probability distributions 
+        represented as such: {'key1': val1, ... ,'keyn':valn}
+        multiply all values with the second argument `a`
+    '''
+    return {key:value*a for (key,value) in dict_.iteritems()}
+ 
+def normalizedict(dict_):
+    '''
+        given a dict represented as such: {'key1': val1, ... ,'keyn':valn}
+        scale all values such that they sum to 1.0    
+    '''
+    s=0.0
+    for key in dict_.keys():
+        s=s+dict_[key]
+    return {key:(value/s) for (key,value) in dict_.iteritems()}
+
+def mergedistributions(dist_):
+    '''
+        given a dict of dicts, each represented as such: 
+        {'key1': val1, ... ,'keyn':valn}
+        we retun a combined dict, where values corresponding  
+        to key1 is the average over 
+        all component dicts
+    '''
+    num=len(dist_.keys())
+    key_list=[]
+    for key in dist_.keys():
+        key_list=np.append(key_list,dist_[key].keys())
+        
+    D={}
+    for key in key_list:
+        D[key]=0.0
+        
+    for count in dist_.keys():
+        for key_ in dist_[count].keys():
+            if key_ in dist_[count]:
+                D[key_]=D[key_]+dist_[count][key_]
+    return {key:value/(num+0.0) for (key,value) in D.iteritems() }
+
+def getMergedDistribution(tree,cond={}):
+    '''
+        get distribution over keys given particular
+        constriants (cond) on the decision tree
+        
+        Arguments:
+        
+        tree: decision tree returned by mlx.py
+        cond: conditions that specify constraints
+              on the decision tree
+        
+    '''
+    node_id_map={feature_name:np.array([], dtype=int)
+                 for (i,feature_name) in tree.feature.iteritems()}
+    for (i,feature_name) in tree.feature.iteritems():
+        node_id_map[feature_name]=np.append(node_id_map[feature_name],int(i))
+    
+    if DEBUG:
+        print(node_id_map)
+    #propagate to find current nodes
+    children={i:set() for i in cond.keys()}
+    for feature_name in cond.keys():
+        for node_id in tree.feature:
+            if tree.feature[node_id] == feature_name:
+                children[feature_name]=children[feature_name].union(tree.children[node_id])
+    if DEBUG:
+        print(children)
+
+    current_active_nodes=np.array([],int)
+    for feature_name in cond.keys():
+        for child in children[feature_name]:
+            for parent in node_id_map[feature_name]:
+                if (parent,child) in tree.edge_cond_:
+                    for edge_var in cond[feature_name]:
+                        if edge_var in tree.edge_cond_[(parent,child)]:
+                            if DEBUG:
+                                print(parent,child,"::",tree.edge_cond_[(parent,child)])
+                            current_active_nodes=np.append(current_active_nodes,child)
+    
+    S=0.0
+    if current_active_nodes.size == 0:
+        current_active_nodes=np.array([1],int)
+    for i in current_active_nodes:
+        S=S+tree.num_pass_[i]
+        
+    indexed_dist={i:dictprod(tree.class_pred_[i],tree.num_pass_[i]/S)
+                  for i in current_active_nodes}
+    dist_=normalizedict(mergedistributions(indexed_dist))
+        
+    if DEBUG:
+        print(children)
+        print(current_active_nodes)
+        print("ID",indexed_dist)
+        print("MD",mergedistributions(indexed_dist))
+        print("ND",normalizedict(mergedistributions(indexed_dist)))
+        
+    return dist_  
+    
+def sampleTree(tree,cond={},sample='mle',DIST=False,NUMSAMPLE=10):
+    '''
+        draw sample from decision tree
+        specified in the format that 
+        mlx.py returns
+        
+        Arguments:
+        
+        1. cond: dict of the format {'name': value, 'name1': value1,...}
+                 specifies the constraints on the decision tree.
+                 example: {'RBM34':'C','SOX2': 'A'}
+        
+        Note--> we can use arbitrary cond argument, irrespective of if the
+        names are in the decision tree at all or not. Also, we can use 
+        an empty cond dict, which corresponds to the unconstrained tree.
+        In all these cases, it makes sense to ask what is the distribution on the 
+        keys that the decision tree outputs, and we attempt to compute that.
+        
+        2. sample: 'mle'|'random' 
+                   if 'mle' then return the value with maximum probability.
+                   if 'random' then makes random choice NUMSAMPLE times 
+                   and returns the result.
+        
+        3. DIST: TRUE|FALSE
+                 if TRUE returns the distribution from the tree 
+                 after applying the constraints
+    '''
+    dist_=getMergedDistribution(tree,cond=cond)
+    if sample is 'mle':
+        sample=max(dist_.iteritems(), key=operator.itemgetter(1))[0]
+    if sample is 'random':
+        probs = dist_.values()
+        keys =  dist_.keys()
+
+        sample = np.random.choice(keys,NUMSAMPLE, replace=True, p=probs)
+    if DIST:
+        return sample,dist_
+    return sample
