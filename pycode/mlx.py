@@ -1219,6 +1219,9 @@ def jsdiv(p1,p2,smooth=True):
 
 
 def qDistance(seq0,seq1,PATH_TO_TREES):
+    '''
+     computing genomic distance using qnets
+    '''
     P0=getPerturbation(seq0,PATH_TO_TREES)
     P1=getPerturbation(seq1,PATH_TO_TREES)
     S=0.0
