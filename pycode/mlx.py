@@ -1168,3 +1168,67 @@ def sampleTree(tree,cond={},sample='mle',DIST=False,NUMSAMPLE=10):
     if DIST:
         return sample,dist_
     return sample
+
+def getFmap(PATH_TO_TREES):
+    F={}
+    TREE={}
+    TREES=glob.glob(PATH_TO_TREES)
+    for filename in TREES:
+        with open(filename,'rb') as f:
+            TR = pickle.load(f)
+        f.close()
+        index=os.path.splitext(os.path.basename(filename))[0].split('_')[-1]
+        #print index
+        F[index]=[]
+        TREE[index]=TR
+        for key,value in TR.feature.iteritems():
+            if not TR.TREE_LEAF[key]:
+                F[index]=np.append(F[index],value)
+    return F,TREE
+
+def getPerturbation(seq,PATH_TO_TREES):
+    F,TREES=getFmap(PATH_TO_TREES)
+    P={}
+    for KEY in F.keys():
+        I=[int(x.replace('P','')) for x in F[KEY]]
+        DICT_={'P'+str(i):seq[i] for i in I}
+        D=sampleTree(TREES[KEY],DICT_,sample='random',DIST=True)[1]
+        
+        P[KEY]=[D[x] for x in sorted(D.keys()) ]
+    return P
+
+def klscore(p1,p2):
+    
+    if any(np.array(p2)<=0):
+        return np.nan
+    
+    return np.array([p1[i]*np.log2(p1[i]/p2[i]) for i in range(len(p1))]).sum()
+
+def jsdiv(p1,p2,smooth=True):
+    
+    
+    p1=np.array(p1)
+    p2=np.array(p2)
+
+    if(smooth):
+        p1=(p1+0.0001)/1.0001
+        p2=(p2+0.0001)/1.0001
+    
+    p=0.5*(p1+p2)
+    return 0.5*(klscore(p1,p)+klscore(p2,p))
+
+
+def qDistance(seq0,seq1,PATH_TO_TREES):
+    P0=getPerturbation(seq0,PATH_TO_TREES)
+    P1=getPerturbation(seq1,PATH_TO_TREES)
+    S=0.0
+    nCount=0
+
+    # @TIMMY parallelize the following loop
+    for key0 in P0.keys():
+        if key0 in P1.keys():
+            S=S+jsdiv(P0[key0],P1[key0])
+            nCount=nCount+1
+    if nCount == 0:
+        nCount=1
+    return S/(nCount+0.0)
