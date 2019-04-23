@@ -24,23 +24,28 @@ for fname in files:
     match = re.match(r'(.*?)_\.dat', fname)
     if match:
         prefix = match.group(1)
-        print(fname)
+
         with open(fname, 'r') as fh:
             rows = fh.read().strip().split('\n')
             for i, x in enumerate(rows):
                 rows[i] = x.strip().split(' ')
             train_rows = int(math.ceil(float(len(rows))/2))
             test_rows = len(rows)-train_rows
+        # print(fname, train_rows, test_rows)
         with open(prefix + '_train.dat', 'w') as fh:
             fh.write(','.join(index_row))
             fh.write('\n')
+            # print('train')
             for i in range(train_rows):
+                print(i)
                 fh.write(','.join(rows[i][:reference_count]))
                 fh.write('\n')
+        # print('test')
         with open(prefix + '_test.dat', 'w') as fh:
             fh.write(','.join(index_row))
             fh.write('\n')
-            for i in range(test_rows, len(rows)):
+            for i in range(train_rows, len(rows)):
+                # print(i)
                 fh.write(','.join(rows[i][:reference_count]))
                 fh.write('\n')
         with open('hivdata/' + prefix + '.dat', 'w') as fh:
