@@ -848,18 +848,21 @@ def Xctree(RESPONSE__,
 
 #------------------------------------------------------------
 
+
 def tree_export(TR,outfilename='out.dot',
                 leaves_parallel=True,
                 rounded=True,
                 filled=True,
-                TYPE='polylines',
+                TYPE='Curved',
                 BGCOLOR='transparent',
                 legend=True,
                 LIGHT=1,
+                LABELCOL='deepskyblue4',
+                TEXTCOL='black',
                 EXEC=True):
     LABELTYPE='label'
-    if TYPE=='ortho':
-        LABELTYPE='xlabel'
+    #if TYPE=='ortho':
+    #    LABELTYPE='xlabel'
     out_file = open(outfilename, "w")
 
     out_file.write('digraph Tree {\n')
@@ -871,8 +874,8 @@ def tree_export(TR,outfilename='out.dot',
     if rounded:
         rounded_filled.append('rounded')
     if len(rounded_filled) > 0:
-        out_file.write(', style="%s", color="black"'
-                       % ", ".join(rounded_filled))
+        out_file.write(', style="%s", color="%s"'
+                       % (", ".join(rounded_filled),TEXTCOL))
     if rounded:
         out_file.write(', fontname=helvetica')
     out_file.write('] ;\n')
@@ -923,18 +926,18 @@ def tree_export(TR,outfilename='out.dot',
     for node_id in TR.feature.keys():
         out_file.write('%d [label="%s"' % (node_id , node_str[node_id]))
         if filled:
-            out_file.write(', fillcolor="%s"' % node_color[node_id])
+            out_file.write(', fillcolor="%s",fontcolor="%s"' % (node_color[node_id],TEXTCOL))
         out_file.write('] ;\n')
 
     for parent in TR.children.keys():
         if not TR.TREE_LEAF[parent]:
-            out_file.write('%d -> %d [%s="%s",fontcolor=deepskyblue2' % (parent,
+            out_file.write('%d -> %d [%s="%s",fontcolor=%s' % (parent,
                                                      TR.children_left[parent],LABELTYPE,
-                                                     ''.join(TR.edge_cond_[(parent,TR.children_left[parent])])))
+                                                               ''.join(TR.edge_cond_[(parent,TR.children_left[parent])]),LABELCOL))
             out_file.write('] ;\n')
-            out_file.write('%d -> %d [%s="%s",fontcolor=deepskyblue2' % (parent,
+            out_file.write('%d -> %d [%s="%s",fontcolor=%s' % (parent,
                                                      TR.children_right[parent],LABELTYPE,
-                                                     ''.join(TR.edge_cond_[(parent,TR.children_right[parent])])))
+                                                     ''.join(TR.edge_cond_[(parent,TR.children_right[parent])]),LABELCOL))
             out_file.write('] ;\n')
 
     if leaves_parallel:
@@ -955,6 +958,8 @@ def tree_export(TR,outfilename='out.dot',
         outfilename_ = os.path.join(path, 'TREE_' + basename.replace('.dot', '.png'))
         subprocess.Popen(["dot", '-Tpng', outfilename, '-o', outfilename_])
     return
+
+
 
 
 #------------------------------------------------------------
