@@ -1,0 +1,48 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [splines=straight, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica,color=white] ;
+1 [label="P3690
+
+pval: 7.66E-15", fillcolor="#8da85a",fontcolor="black"] ;
+2 [label="P3918
+
+pval: 3.08E-03", fillcolor="#7e9597",fontcolor="black"] ;
+3 [label="A
+Prob: 0.14
+Err: 20.0%", fillcolor="#c48d4a",fontcolor="black"] ;
+4 [label="G
+Prob: 0.14
+Err: 0.0%", fillcolor="#399de5",fontcolor="black"] ;
+5 [label="P2465
+
+pval: 3.00E-15", fillcolor="#93af43",fontcolor="black"] ;
+6 [label="P239
+
+pval: 3.70E-08", fillcolor="#71c347",fontcolor="black"] ;
+7 [label="C
+Prob: 0.1
+Err: 42.86%", fillcolor="#6ea982",fontcolor="black"] ;
+8 [label="P786
+
+pval: 4.05E-03", fillcolor="#72c939",fontcolor="black"] ;
+9 [label="C
+Prob: 0.3
+Err: 0.0%", fillcolor="#47e539",fontcolor="black"] ;
+10 [label="A
+Prob: 0.11
+Err: 0.0%", fillcolor="#e58139",fontcolor="black"] ;
+11 [label="A
+Prob: 0.21
+Err: 0.0%", fillcolor="#e58139",fontcolor="black"] ;
+1 -> 2 [label="A",fontcolor=white] ;
+1 -> 5 [label="CTG",fontcolor=white] ;
+2 -> 3 [label="TG",fontcolor=white] ;
+2 -> 4 [label="C",fontcolor=white] ;
+5 -> 11 [label="G",fontcolor=white] ;
+5 -> 6 [label="ACT",fontcolor=white] ;
+6 -> 8 [label="C",fontcolor=white] ;
+6 -> 7 [label="ATG",fontcolor=white] ;
+8 -> 9 [label="AC",fontcolor=white] ;
+8 -> 10 [label="G",fontcolor=white] ;
+}

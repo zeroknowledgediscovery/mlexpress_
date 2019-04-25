@@ -859,6 +859,7 @@ def tree_export(TR,outfilename='out.dot',
                 LIGHT=1,
                 LABELCOL='deepskyblue4',
                 TEXTCOL='black',
+                EDGECOLOR='gray',
                 EXEC=True):
     LABELTYPE='label'
     #if TYPE=='ortho':
@@ -883,8 +884,11 @@ def tree_export(TR,outfilename='out.dot',
     # Specify graph & edge aesthetics
     if leaves_parallel:
         out_file.write('graph [ranksep=equally, splines=%s, bgcolor=%s, dpi=600] ;\n' % (TYPE,BGCOLOR))
+    else:
+        out_file.write('graph [splines=%s, bgcolor=%s, dpi=600] ;\n' % (TYPE,BGCOLOR))
+
     if rounded:
-        out_file.write('edge [fontname=helvetica] ;\n')
+        out_file.write('edge [fontname=helvetica,color=%s] ;\n' % EDGECOLOR)
     if rotate:
         out_file.write('rankdir=LR ;\n')
 
