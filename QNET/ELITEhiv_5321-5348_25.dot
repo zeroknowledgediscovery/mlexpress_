@@ -1,0 +1,5 @@
+digraph {
+	P5321 [shape=circle]
+	P5321 [style=filled]
+	P5321 [fillcolor=red]
+}

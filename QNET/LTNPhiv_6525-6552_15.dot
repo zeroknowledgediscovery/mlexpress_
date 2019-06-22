@@ -1,0 +1,8 @@
+digraph {
+	P2139 -> P6529
+	P7789 -> P6537
+	P6537 -> P7789
+	P6525 [shape=circle]
+	P6525 [style=filled]
+	P6525 [fillcolor=red]
+}

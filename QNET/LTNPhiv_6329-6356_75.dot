@@ -1,0 +1,12 @@
+digraph {
+	P5356 -> P6333
+	P6329 -> P693
+	P3023 -> P6352
+	P4948 -> P6353
+	P4948 -> P4570
+	P693 -> P6329
+	P4570 -> P4948
+	P6329 [shape=circle]
+	P6329 [style=filled]
+	P6329 [fillcolor=red]
+}
