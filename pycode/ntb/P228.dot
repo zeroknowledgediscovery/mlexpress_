@@ -1,0 +1,28 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [ranksep=equally, splines=polylines, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica] ;
+LEGEND [label="Response : P228
+Classes: A|C|G
+In ACC: 0.87
+Out ACC: 0.77
+",shape=note,align=left,style=filled,fillcolor="slategray",fontcolor="white",fontsize=10];1 [label="P4122
+
+pval: 1.33E-15", fillcolor="#c26e6d"] ;
+2 [label="P2966
+
+pval: 2.34E-03", fillcolor="#8d57ba"] ;
+3 [label="G
+Prob: 0.2
+Err: 0.0%", fillcolor="#8139e5"] ;
+4 [label="A
+Prob: 0.1
+Err: 42.86%", fillcolor="#a59366"] ;
+5 [label="A
+Prob: 0.7
+Err: 12.0%", fillcolor="#d9784d"] ;
+1 -> 2 [label="ACG",fontcolor=deepskyblue2] ;
+1 -> 5 [label="T",fontcolor=deepskyblue2] ;
+2 -> 3 [label="C",fontcolor=deepskyblue2] ;
+2 -> 4 [label="TG",fontcolor=deepskyblue2] ;
+{rank = same; 3;4;5;}{rank = same; LEGEND;1;}}
