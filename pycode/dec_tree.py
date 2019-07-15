@@ -127,23 +127,25 @@ CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
                                        datatest__=datatest,
                                        VERBOSE=VERBOSE,
                                        TREE_EXPORT=False)
-if TR is not None:
-    sorted_feature_imp = sorted(TR.significant_feature_weight_.items(),
-                                key=operator.itemgetter(1))
-    for i in sorted_feature_imp:
-        if i[1] > FEATURE_IMP_THRESHOLD:
-            print i[0],RS[0],i[1]
-else:
-    print "XX",RS[0],0.0
+print ACC
 
-print TR.num_pass_
-ml.tree_export(TR,outfilename='tmp.dot')
+#if TR is not None:
+#    sorted_feature_imp = sorted(TR.significant_feature_weight_.items(),
+#                                key=operator.itemgetter(1))
+#    for i in sorted_feature_imp:
+#        if i[1] > FEATURE_IMP_THRESHOLD:
+#            print i[0],RS[0],i[1]
+#else:
+#    print "XX",RS[0],0.0
+#
+#print TR.num_pass_
+#ml.tree_export(TR,outfilename='tmp.dot')
+#
+#
+#with open('tree.pkl', 'wb') as f:
+#    pickle.dump(TR, f)
 
 
-with open('tree.pkl', 'wb') as f:
-    pickle.dump(TR, f)
-
-
-sys.stdout.write(ml.RESET)
+#sys.stdout.write(ml.RESET)
 #------------ EOF
  

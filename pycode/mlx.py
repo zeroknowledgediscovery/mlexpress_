@@ -989,30 +989,34 @@ def randomForestX(RESPONSE__,
     fmla__ = Formula(RESPONSE__+' ~ .')
     RF=randomForest(fmla__,data=datatrain__,
                     ntree=NUMTREE,
-                    trace=True,
+                    trace=VERBOSE,
                     cores=CORES)
     if VARIMP:
         RF__=randomForest_(fmla__,data=datatrain__,ntree=NUMTREE)
         RFimp=getDataFrame(rimp(RF__),
                            'feature').sort_values('MeanDecreaseGini',
                                                   ascending=False)
-        RFimp.to_csv('imp.czv')
+        #RFimp.to_csv('imp.czv')
         if PLOT:
             plotfi(RFimp)
         else:
-            print RFimp.head(20)
+            if VERBOSE:
+                print RFimp.head(20)
 
         PrRF,ACCRF,CF_=getresponseframe_RF(datatrain__,
                                            RF__,
                                            RESPONSE__,
                                            olddata=True)
-        sys.stdout.write(WHITE)
-        print
-        print "ACC (in  sample, randomForest package): ",ACCRF
-        sys.stdout.write(RESET)
+        if VERBOSE:
+            sys.stdout.write(WHITE)
+            print
+            print "ACC (in  sample, randomForest package): ",ACCRF
+            sys.stdout.write(RESET)
+            
         EFI=stat.entropy(RFimp.MeanDecreaseGini.values,base=2)
-        print
-        print "Entropy of Feature Importance: ",EFI
+
+        if VERBOSE:
+            print "Entropy of Feature Importance: ",EFI
 
 
     PrRF,ACCRF,CFRF=getresponseframe_RF(datatrain__,
@@ -1022,17 +1026,17 @@ def randomForestX(RESPONSE__,
         PrxRF,ACCxRF,CFxRF=getresponseframe_RF(datatest__,
                                                   RF,
                                                   RESPONSE__)
-
-    sys.stdout.write(RED)
-    print
-    print "ACC (in  sample, Random Forest): ",ACCRF
-    if datatest__ is not None:
+    if VERBOSE:
+        sys.stdout.write(RED)
         print
-        print "ACC (out sample, Random Forest): ",ACCxRF
-        sys.stdout.write(CYAN)
-        print "Out of Sample Confusion Matrix:"
-        print CFxRF
-        sys.stdout.write(RESET)
+        print "ACC (in  sample, Random Forest): ",ACCRF
+        if datatest__ is not None:
+            print
+            print "ACC (out sample, Random Forest): ",ACCxRF
+            sys.stdout.write(CYAN)
+            print "Out of Sample Confusion Matrix:"
+            print CFxRF
+            sys.stdout.write(RESET)
 
 
     return RF,PrRF,ACCRF,CFRF,PrxRF,ACCxRF,CFxRF,RFimp,EFI
