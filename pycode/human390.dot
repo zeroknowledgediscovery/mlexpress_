@@ -1,0 +1,40 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [splines=straight, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica,color=white] ;
+1 [label="P299
+
+pval: 0.00E+00", fillcolor="#3b9ce2",fontcolor="black"] ;
+2 [label="P251
+
+pval: 0.00E+00", fillcolor="#399ce4",fontcolor="black"] ;
+3 [label="K
+Prob: 0.06
+Err: 2.13%", fillcolor="#3c9ae5",fontcolor="black"] ;
+4 [label="P136
+
+pval: 0.00E+00", fillcolor="#399ce4",fontcolor="black"] ;
+5 [label="K
+Prob: 0.1
+Err: 0.64%", fillcolor="#399de3",fontcolor="black"] ;
+6 [label="K
+Prob: 0.82
+Err: 0.24%", fillcolor="#399ce4",fontcolor="black"] ;
+7 [label="P201
+
+pval: 1.56E-04", fillcolor="#869097",fontcolor="black"] ;
+8 [label="E
+Prob: 0.01
+Err: 6.67%", fillcolor="#d98244",fontcolor="black"] ;
+9 [label="K
+Prob: 0.01
+Err: 0.0%", fillcolor="#399de5",fontcolor="black"] ;
+1 -> 2 [label="ELN",fontcolor=white] ;
+1 -> 7 [label="K",fontcolor=white] ;
+2 -> 3 [label="D",fontcolor=white] ;
+2 -> 4 [label="XKEG",fontcolor=white] ;
+4 -> 5 [label="AE",fontcolor=white] ;
+4 -> 6 [label="ITG",fontcolor=white] ;
+7 -> 8 [label="S",fontcolor=white] ;
+7 -> 9 [label="T",fontcolor=white] ;
+}
