@@ -12,7 +12,7 @@ import pandas as pd
 import seaborn as sns
 import scipy.stats as stat 
 import argparse
-import sparklines
+#import sparkline
 import warnings
 import tempfile
 import operator
@@ -79,14 +79,7 @@ parser.add_argument('--importance_threshold', dest='FEATURE_IMP_THRESHOLD',
                     action="store", type=float,
                     default=0.2,
                     help="Feature importance threshold: default 0.2")
-parser.add_argument('--Impfile', dest='IMPFILE',
-                    action="store", type=str,
-                    default=None,
-                    help="Feature importance file")
 
-if len(sys.argv[1:])==0:
-    parser.print_help()
-    parser.exit()
 
 results=parser.parse_args()
 RESPONSE=results.RESPONSE
@@ -130,37 +123,20 @@ datatest=ml.setdataframe(FILEx,
                          zerodel=ZERODEL)
 
 
-# RF: Random forest object
-# PrRF:
-# ACCRF: accuracy insample
-# ACCxRF: accuracu out of sample
-# RFimp: Feature importance RF
-# EFI: Entropy of feature importance
-# CFRF: Confusion table insample
-# CFxRF: Confusion table out-of-sample
+RF,PrRF,ACCRF,CFRF,PrxRF,ACCxRF,CFxRF,RFimp,EFI=ml.randomForestX(RESPONSE,
+                                                              datatrain,
+                                                              None,
+                                                              NUMTREE=NUMTREE,
+                                                              CORES=CORES,
+                                                              VERBOSE=VERBOSE,
+                                                              VARIMP=VARIMP,
+                                                              PLOT=PLOT)
 
-RF,PrRF,ACCRF,CFRF,PrxRF,ACCxRF,CFxRF,RFimp,EFI=\
-        ml.randomForestX(RESPONSE__=RESPONSE,
-                         datatrain__=datatrain,
-                         datatest__=datatest,
-                         VERBOSE=VERBOSE,
-                         NUMTREE=NUMTREE,
-                         CORES=CORES,
-                         VARIMP=VARIMP,
-                         PLOT=PLOT)
+print(ACCRF,ACCxRF,EFI)
 
+#CT,Pr,ACC,CF,Prx,ACCx,CFx,TR=ml.Xctree(RESPONSE__=RESPONSE,
+#                                       datatrain__=datatrain,
+#                                       datatest__=datatest,
+#                                       VERBOSE=VERBOSE,
+#                                       TREE_EXPORT=False)
 
-if results.IMPFILE is not None:
-    RFimp.to_csv(results.IMPFILE,index=None)
-    
-print ACCRF,ACCxRF,EFI
-#print PrRF
-
-#
-#with open('tree.pkl', 'wb') as f:
-#    pickle.dump(TR, f)
-#
-#
-#sys.stdout.write(ml.RESET)
-#------------ EOF
- 

@@ -12,7 +12,7 @@ import pandas as pd
 import seaborn as sns
 import scipy.stats as stat 
 import argparse
-import sparkline
+import sparklines
 import warnings
 import tempfile
 import operator

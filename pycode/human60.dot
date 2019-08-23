@@ -1,0 +1,16 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [splines=straight, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica,color=white] ;
+1 [label="P288
+
+pval: 0.00E+00", fillcolor="#8039e4",fontcolor="black"] ;
+2 [label="L
+Prob: 0.01
+Err: 12.5%", fillcolor="#8248d4",fontcolor="black"] ;
+3 [label="L
+Prob: 0.99
+Err: 0.07%", fillcolor="#8039e4",fontcolor="black"] ;
+1 -> 2 [label="AXE",fontcolor=white] ;
+1 -> 3 [label="IFMV",fontcolor=white] ;
+}

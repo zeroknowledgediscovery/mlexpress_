@@ -1,0 +1,24 @@
+digraph Tree {
+node [shape=box, style="filled, rounded", color="black", fontname=helvetica] ;
+graph [splines=straight, bgcolor=transparent, dpi=600] ;
+edge [fontname=helvetica,color=white] ;
+1 [label="P3679
+
+pval: 0.00E+00", fillcolor="#91ad4c",fontcolor="black"] ;
+2 [label="P1595
+
+pval: 5.98E-12", fillcolor="#4cd15c",fontcolor="black"] ;
+3 [label="G
+Prob: 0.11
+Err: 25.0%", fillcolor="#6084e5",fontcolor="black"] ;
+4 [label="C
+Prob: 0.44
+Err: 0.0%", fillcolor="#47e539",fontcolor="black"] ;
+5 [label="A
+Prob: 0.45
+Err: 0.0%", fillcolor="#e58139",fontcolor="black"] ;
+1 -> 2 [label="ACG",fontcolor=white] ;
+1 -> 5 [label="T",fontcolor=white] ;
+2 -> 3 [label="AG",fontcolor=white] ;
+2 -> 4 [label="C",fontcolor=white] ;
+}
